@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product | Coveted</title>
+  <meta name="description" content="">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="shop">
+<main id="main">
+
+  <div class="wrap">
+    <p class="crumbs" id="crumbs"></p>
+    <div class="pdp">
+      <div><div class="pdp__art" id="art"></div></div>
+      <div class="pdp__info" id="info"></div>
+    </div>
+  </div>
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head"><h2 id="pairs-title">Pair it with</h2></div>
+      <div class="grid" id="pairs"></div>
+    </div>
+  </section>
+  <section class="section section--surface section--line" id="reviews">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Reviews</h2>
+        <p id="reviews-summary"></p>
+      </div>
+      <div class="reviews" id="product-reviews"></div>
+    </div>
+  </section>
+  <section class="section section--line" id="product-guides-wrap">
+    <div class="wrap">
+      <div class="section__head"><h2>Read before you start</h2></div>
+      <div class="guides" id="product-guides"></div>
+    </div>
+  </section>
+
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages.js"></script>
+<script>Pages.product();</script>
+</body>
+</html>

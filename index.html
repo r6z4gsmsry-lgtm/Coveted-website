@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coveted — Hard-to-source actives, always in stock</title>
+  <meta name="description" content="Retinal, minoxidil, azelaic acid, next-generation SPF and more. Every ingredient named with its strength. Subscribe and save 15%.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="home">
+<main id="main">
+
+  <section class="hero">
+    <div class="hero__copy">
+      <p class="eyebrow">Texture · Hairline · Dark circles · Oil control</p>
+      <h1>Hard-to-source actives. Reliably in stock.</h1>
+      <p class="lede">Every product leads with the problem it solves and lists every ingredient at its exact strength. No pink, no blue, no guesswork.</p>
+      <div class="hero__actions">
+        <a class="btn" href="#concerns">Shop by concern</a>
+        <a class="btn btn--ghost" href="subscribe.html">Subscribe &amp; save 15%</a>
+      </div>
+    </div>
+    <div class="hero__art" id="hero-art" aria-hidden="true"></div>
+  </section>
+
+  <section class="section" id="concerns">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Start with the problem.</h2>
+        <p class="muted">Pick what you want to change. We'll show you what works, what to pair it with, and what results to expect.</p>
+      </div>
+      <div class="concerns" id="concern-grid"></div>
+    </div>
+  </section>
+
+  <section class="section section--ink">
+    <div class="wrap">
+      <p class="eyebrow">Our stock promise</p>
+      <h2 style="max-width:20ch">If it's hard to find elsewhere, it shouldn't be hard to find here.</h2>
+      <p class="muted" style="max-width:56ch">We publish how many days each product was in stock over the last year. When something does run short, the page stays up with a firm restock date, and you can reserve it without being charged until it ships.</p>
+      <div class="pillars" style="margin-top:3rem">
+        <div class="pillar"><p class="num" id="stock-pct">99%</p><p class="muted">Average days in stock across the range, last 12 months</p></div>
+        <div class="pillar"><p class="num">2pm</p><p class="muted">Order before 2pm on a weekday and it's dispatched the same day</p></div>
+        <div class="pillar"><p class="num">30</p><p class="muted">Days to return anything, even opened. Free return label</p></div>
+        <div class="pillar"><p class="num">5th</p><p class="muted">Every fifth order includes a full-size product of your choice</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Most reordered</h2>
+        <a class="btn btn--ghost" href="shop.html">View all products</a>
+      </div>
+      <div class="grid" id="bestsellers"></div>
+    </div>
+  </section>
+
+  <section class="section section--surface section--line">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Subscribe &amp; save</p>
+        <h2>Never run out mid-routine.</h2>
+        <p class="muted">Retinoids, minoxidil and sunscreen only work if you use them every day. Subscriptions are timed to how long each product lasts, so the next one arrives before the last one runs out.</p>
+        <ul class="ticks">
+          <li><strong>15% off</strong><span>Every delivery, on every product.</span></li>
+          <li><strong>Your timing</strong><span>Skip, delay or change frequency in one click.</span></li>
+          <li><strong>No lock-in</strong><span>Cancel any time. No minimum orders.</span></li>
+          <li><strong>Heads-up</strong><span>One email three days before each shipment. Nothing else.</span></li>
+        </ul>
+        <a class="btn" href="subscribe.html">How subscriptions work</a>
+      </div>
+      <div class="sub-demo" id="sub-demo"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Results, from customers.</h2>
+        <p class="muted">Verified buyers, with the number of weeks they'd used the product when they wrote the review.</p>
+      </div>
+      <div class="reviews" id="home-reviews"></div>
+    </div>
+  </section>
+
+  <section class="section section--line">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Guides</h2>
+        <a class="btn btn--ghost" href="journal.html">All guides</a>
+      </div>
+      <div class="guides" id="home-guides"></div>
+    </div>
+  </section>
+
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages.js"></script>
+<script>Pages.home();</script>
+</body>
+</html>

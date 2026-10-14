@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop by concern | Coveted</title>
+  <meta name="description" content="Retinal, minoxidil, azelaic acid, SPF and more, listed by the problem they solve.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500&family=Newsreader:opsz,wght@6..72,300;6..72,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="shop">
+<main id="main">
+
+  <div class="wrap">
+    <div class="section" style="padding-bottom:2rem">
+      <p class="eyebrow">Shop</p>
+      <h1 id="shop-title">All products</h1>
+      <p class="muted" id="shop-line" style="max-width:50ch"></p>
+    </div>
+    <p class="eyebrow">Concern</p>
+    <div class="filters" id="concern-filters"></div>
+    <p class="eyebrow" style="margin-top:1.2rem">Type</p>
+    <div class="filters" id="category-filters"></div>
+    <div class="toolbar" style="margin-top:1.5rem">
+      <span class="small muted" id="count"></span>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+        <label><input type="checkbox" id="in-stock"> Ready to ship only</label>
+        <label>Sort
+          <select class="select select--small" id="sort" style="margin:0;width:auto">
+            <option value="popular">Most reordered</option>
+            <option value="rating">Highest rated</option>
+            <option value="price-asc">Price, low to high</option>
+            <option value="price-desc">Price, high to low</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="grid" id="results" style="padding-bottom:96px"></div>
+  </div>
+
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages.js"></script>
+<script>Pages.shop();</script>
+</body>
+</html>
