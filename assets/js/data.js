@@ -221,7 +221,7 @@ const PRODUCTS = [
     "sub": "PA++++",
     "badge": "Bestseller",
     "benefit": "Invisible, all-day protection",
-    "name": "Daily Fluid SPF 50+ PA++++",
+    "name": "Daily Sunscreen SPF 50+ PA++++",
     "format": "Broad-spectrum UVA/UVB sunscreen",
     "category": "sunscreen",
     "concerns": [
