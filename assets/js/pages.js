@@ -24,7 +24,19 @@ function guideCard(g) {
 
 const Pages = {
   home() {
-    $("#hero-art").innerHTML = ["minox-5", "retinal-01", "spf-50"].map((id) => productArt(byId(id))).join("");
+    // Size the wordmark so it spans the full content width exactly.
+    const brand = $(".hero__brand");
+    const fit = () => {
+      brand.style.fontSize = "";
+      const box = getComputedStyle(brand.parentElement);
+      const width = brand.parentElement.clientWidth - parseFloat(box.paddingLeft) - parseFloat(box.paddingRight);
+      const ratio = (width / brand.scrollWidth) * 0.99;
+      brand.style.fontSize = parseFloat(getComputedStyle(brand).fontSize) * ratio + "px";
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    addEventListener("resize", fit);
+
 
     $("#concern-grid").innerHTML = CONCERNS.map((c) => {
       const n = PRODUCTS.filter((p) => p.concerns.includes(c.id)).length;

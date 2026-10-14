@@ -52,8 +52,8 @@ function labelLines(name) {
 function label(p, x, y, w) {
   const lines = labelLines(p.name);
   const h = 34 + lines.length * 11;
-  const text = lines.map((l, i) => `<text x="${x + w / 2}" y="${y + 30 + i * 11}" text-anchor="middle" font-size="8.5" fill="#1d1c1a">${esc(l)}</text>`).join("");
-  return `<g font-family="IBM Plex Mono, monospace">
+  const text = lines.map((l, i) => `<text x="${x + w / 2}" y="${y + 30 + i * 11}" text-anchor="middle" font-size="7.6" fill="#1d1c1a">${esc(l)}</text>`).join("");
+  return `<g font-family="Geist Mono, monospace">
     <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f4efe4"/>
     <text x="${x + w / 2}" y="${y + 13}" text-anchor="middle" font-size="6.5" letter-spacing="2" fill="#6b665d">COVETED</text>
     <line x1="${x + 8}" y1="${y + 18}" x2="${x + w - 8}" y2="${y + 18}" stroke="#bdb5a5" stroke-width=".6"/>
