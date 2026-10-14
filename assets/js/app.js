@@ -238,7 +238,7 @@ function startCheckout() {
       <label class="choice"><input type="radio" name="health" value="no"> No</label>
       <label for="health-notes" class="sr">Details</label>
       <textarea class="select" id="health-notes" name="notes" rows="2" placeholder="If yes, tell us briefly"></textarea></fieldset>
-    <label class="health__state" for="health-state"><span>Shipping state</span>
+    <label class="health__state" for="health-state"><span>Shipping country</span>
       <select class="select" id="health-state" name="state" required><option value="">Choose</option>${REGIONS.map((r) => `<option>${r}</option>`).join("")}</select></label>
   </form>`;
   $("#cart-foot").innerHTML = `<button class="btn btn--block" form="health">Continue to payment</button>

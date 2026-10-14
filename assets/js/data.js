@@ -635,9 +635,9 @@ const STORE = {
   "freeShippingOver": 50
 };
 
-// States you ship Rx items to. Replace with your real list.
+// Countries you ship Rx items to.
 const REGIONS = [
-Australia,
-   Uk,
-   USA
+  "Australia",
+  "UK",
+  "USA"
 ];
