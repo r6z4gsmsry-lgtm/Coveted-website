@@ -74,7 +74,6 @@ const Pages = {
     $("#concern-grid").innerHTML = CONCERNS.map((c) => {
       const n = PRODUCTS.filter((p) => p.concerns.includes(c.id)).length;
       return `<a class="concern-tile" href="shop.html#${c.id}" style="--tint:${c.tint}">
-        <span class="concern-tile__dot"></span>
         <strong>${c.name}</strong>
         <span class="small muted">${n} product${n === 1 ? "" : "s"}</span>
       </a>`;
@@ -162,7 +161,7 @@ const Pages = {
 
     $("#info").innerHTML = `
       <p class="eyebrow">${p.concerns.map((id) => CONCERNS.find((c) => c.id === id).name).join(" · ")}</p>
-      <p class="best">★ The best at what it does</p>
+      <p class="best">The best at what it does.</p>
       <h1>${esc(p.name)}</h1>
       <p class="muted">${esc(p.format)} · ${esc(p.size)}</p>
       <p><a href="#reviews" style="text-decoration:none">${stars(p.rating)} <span class="small muted">${p.rating} · ${p.reviewCount} reviews</span></a></p>
