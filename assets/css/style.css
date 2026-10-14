@@ -529,3 +529,5 @@ textarea.select { resize: vertical; min-height: 64px; }
 .pdp__art { border-radius: var(--radius); background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 62%), var(--tint, var(--sunk)); }
 .pdp__art svg { filter: drop-shadow(0 14px 18px rgba(0, 0, 0, .14)); }
 .line__art { border-radius: 12px; background: var(--tint, var(--sunk)); }
+
+.best { display: inline-block; margin: 0 0 .8rem; background: var(--orange); color: #fffaf1; border-radius: 999px; padding: .45em .9em; font: 500 .68rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }

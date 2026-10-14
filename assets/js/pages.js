@@ -149,14 +149,20 @@ const Pages = {
     const concern = CONCERNS.find((c) => c.id === p.concerns[0]);
     const out = p.stock.status === "out";
     document.title = `${p.name} — ${p.format} | Coveted`;
-    $('meta[name="description"]').setAttribute("content", `${p.problem} ${p.actives.map((a) => `${a.name} ${a.pct}`).join(", ")}.`);
+    // Ingredient details are only shown for single-ingredient products.
+    const showIngredients = p.actives.length === 1;
+    $('meta[name="description"]').setAttribute("content", `${p.problem} ${p.benefit || ""}`.trim());
 
     $("#crumbs").innerHTML = `<a href="shop.html">Shop</a> / <a href="shop.html#${concern.id}">${concern.name}</a> / ${esc(p.name)}`;
-    $("#art").innerHTML = productArt(p) + (p.rx ? `<span class="tag tag--rx">Rx</span>` : p.hardToSource ? `<span class="tag">Hard to source</span>` : "");
+    $("#art").innerHTML = productArt(p) + `<div class="card__badges">
+      ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ""}
+      ${p.rx && p.badge !== "Rx" ? `<span class="badge badge--rx">Rx</span>` : ""}
+    </div>`;
     $("#art").style.setProperty("--tint", tintOf(p));
 
     $("#info").innerHTML = `
       <p class="eyebrow">${p.concerns.map((id) => CONCERNS.find((c) => c.id === id).name).join(" · ")}</p>
+      <p class="best">★ The best at what it does</p>
       <h1>${esc(p.name)}</h1>
       <p class="muted">${esc(p.format)} · ${esc(p.size)}</p>
       <p><a href="#reviews" style="text-decoration:none">${stars(p.rating)} <span class="small muted">${p.rating} · ${p.reviewCount} reviews</span></a></p>
@@ -167,10 +173,10 @@ const Pages = {
       </div>
       <p>${esc(p.summary)}</p>
 
-      <table class="table" aria-label="Active ingredients">
+      ${showIngredients ? `<table class="table" aria-label="Active ingredient">
         <thead><tr><th>Active</th><th>Strength</th></tr></thead>
         <tbody>${p.actives.map((a) => `<tr><td>${esc(a.name)}</td><td>${esc(a.pct)}</td></tr>`).join("")}</tbody>
-      </table>
+      </table>` : ""}
 
       ${buyBlock(p, out)}
 
@@ -182,9 +188,9 @@ const Pages = {
         <details class="panel"><summary>What to expect</summary><div class="panel__body results">
           ${p.results.map((r) => `<div><strong>${esc(r.when)}</strong><span>${esc(r.what)}</span></div>`).join("")}
         </div></details>
-        <details class="panel"><summary>Full ingredient list</summary><div class="panel__body">
+        ${showIngredients ? `<details class="panel"><summary>Full ingredient list</summary><div class="panel__body">
           <p class="inci">${esc(p.inci)}</p>
-        </div></details>
+        </div></details>` : ""}
         <details class="panel"><summary>Shipping &amp; returns</summary><div class="panel__body">
           <p>${p.rx
             ? "Ships from our partner pharmacy once a licensed clinician approves your order. Prescription medicines can't be returned."
