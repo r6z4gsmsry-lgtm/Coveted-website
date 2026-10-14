@@ -219,6 +219,8 @@ p { margin: 0 0 1em; }
 .pillar { padding: 1.8rem 1.6rem 0 0; }
 .pillar + .pillar { padding-left: 1.6rem; border-left: 1px solid color-mix(in srgb, currentColor 25%, transparent); }
 .pillar .num { font: 400 2.6rem/1 var(--display); margin-bottom: .6rem; }
+.pillars--2 { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 520px) { .pillars--2 { grid-template-columns: 1fr; } }
 @media (max-width: 880px) {
   .pillars { grid-template-columns: 1fr 1fr; }
   .pillar:nth-child(3) { padding-left: 0; border-left: 0; }
@@ -246,7 +248,7 @@ p { margin: 0 0 1em; }
 
 /* ---------- Approach ---------- */
 
-.approach { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.approach { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
 .approach > div { border-top: 1px solid var(--ink); padding-top: 1.2rem; min-width: 0; }
 .approach p { margin: 0; }
 @media (max-width: 880px) { .approach { grid-template-columns: 1fr 1fr; } }
@@ -417,6 +419,8 @@ p { margin: 0 0 1em; }
   padding: .65em .95em; min-height: 36px; font: 500 .72rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase;
 }
 .quick:hover { background: var(--ink); }
+.quick--off { background: var(--line); color: var(--muted); cursor: default; }
+.quick--off:hover { background: var(--line); }
 .rx-note { background: var(--sage); padding: .8rem 1rem; font-size: .88rem; margin: 0; }
 .rx-note strong { font: 500 .7rem/1 var(--mono); background: var(--green); color: var(--cream); padding: .3em .5em; margin-right: .5em; vertical-align: 1px; }
 .health h3 { margin: .2rem 0 .4rem; }

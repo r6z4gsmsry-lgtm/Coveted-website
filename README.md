@@ -25,12 +25,8 @@ A storefront for hard-to-source, function-first skin, hair and "looksmaxing" pro
 - **Function-first** — navigation and cards lead with the concern (texture, hairline, dark circles, oil…); each product page opens with "The problem".
 - **Ingredient transparency** — every active is listed with its strength on cards and product pages, plus the full ingredient list.
 - **Subscribe & save** — 15% off, subscription is the default option, frequency defaults to how long one unit lasts (`supplyDays`). Switchable per line in the bag.
-- **Reorder reminders** — one-time buyers can opt in to a single email ~7 days before the product typically runs out.
-- **Reliable stock** — every product shows "in stock X of the last 365 days". Out-of-stock pages stay live with a restock date, a free reservation option and in-stock pairings.
-- **Trust** — photo before/after reviews with weeks of use, guides, same-day dispatch, 30-day returns even opened.
-- **Small extras** — choose 2 free samples in the bag.
-- **Simple loyalty** — every 5th order gets a free full-size product. No points.
-- **No over-emailing** — newsletter capped at one a month; email policy published on the subscribe page.
+- **Reorder reminders** — one-time buyers can opt in to an email around when the product typically runs out.
+- **Results-focused trust** — what-to-expect timelines and photo reviews on every product page. The site makes no service guarantees (stock, dispatch times, returns windows, loyalty rewards or email frequency); add your own policies to `help.html` once they're settled.
 
 ## Editing
 

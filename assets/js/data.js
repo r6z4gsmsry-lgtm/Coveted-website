@@ -1236,10 +1236,7 @@ const GUIDES = [
 const STORE = {
   "name": "Coveted",
   "subscribeDiscount": 0.15,
-  "freeShippingOver": 50,
-  "dispatchCutoff": "2pm",
-  "returnDays": 30,
-  "loyaltyEvery": 5
+  "freeShippingOver": 50
 };
 
 // States where your clinician network is licensed. Replace with your real list.

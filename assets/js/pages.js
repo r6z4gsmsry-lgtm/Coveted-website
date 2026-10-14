@@ -31,7 +31,7 @@ function buyBlock(p, out) {
           <input type="radio" name="mode" value="sub" checked>
           <span>
             <strong>Subscribe &amp; save ${STORE.subscribeDiscount * 100}%</strong>
-            <span class="small muted">One lasts about ${p.supplyDays} days, so the next arrives before you run out. Skip or cancel any time.</span>
+            <span class="small muted">One lasts about ${p.supplyDays} days. Deliveries are timed to match.</span>
             <select class="select" name="every" aria-label="Delivery frequency">
               ${frequencyOptions(p).map((d) => `<option value="${d}" ${d === p.supplyDays ? "selected" : ""}>${freqLabel(d)}${d === p.supplyDays ? " · recommended" : ""}</option>`).join("")}
             </select>
@@ -43,21 +43,15 @@ function buyBlock(p, out) {
           <span><strong>One-time purchase</strong><span class="small muted">Optional reorder reminder when you're running low.</span></span>
           <span class="price">${money(p.price)}</span>
         </label>
-        <button class="btn btn--block" type="submit">${out ? `Reserve — ships ${formatDate(p.stock.restock)}` : "Add to bag"}</button>
-        ${out ? `<p class="small muted" style="margin:0">Reserving is free. You're charged only when it ships, and we'll send one email on dispatch.</p>` : ""}
+        <button class="btn btn--block" type="submit" ${out ? "disabled" : ""}>${out ? "Out of stock" : "Add to bag"}</button>
         <ul class="reassure">
-          <li>Free shipping over ${money(STORE.freeShippingOver)}. Weekday orders before ${STORE.dispatchCutoff} dispatched same day</li>
-          <li>${STORE.returnDays}-day returns, even if opened</li>
-          <li>Two free samples of your choice in every order</li>
+          <li>Free shipping over ${money(STORE.freeShippingOver)}</li>
+          <li>Save ${STORE.subscribeDiscount * 100}% with a subscription</li>
         </ul>
-        <div class="record">
-          In stock ${p.stock.record} of the last 365 days
-          <div class="bar"><span style="width:${(p.stock.record / 365) * 100}%"></span></div>
-        </div>
       </form>
 
       <div class="remind" id="remind" hidden style="margin-top:14px">
-        <p><strong>Reorder reminder</strong><br><span class="small muted">One ${esc(p.size.split(" ·")[0])} lasts about ${p.supplyDays} days. We'll send a single email on day ${p.supplyDays - 7} with a one-click reorder link. That's all.</span></p>
+        <p><strong>Reorder reminder</strong><br><span class="small muted">One ${esc(p.size.split(" ·")[0])} lasts about ${p.supplyDays} days. We'll email you around day ${p.supplyDays - 7} with a reorder link.</span></p>
         <form class="field-row" id="remind-form">
           <label class="sr" for="remind-email">Email</label>
           <input id="remind-email" type="email" required placeholder="Email address">
@@ -90,8 +84,6 @@ const Pages = {
       </a>`;
     }).join("");
 
-    const avg = PRODUCTS.reduce((s, p) => s + p.stock.record, 0) / PRODUCTS.length / 365;
-    $("#stock-pct").textContent = Math.floor(avg * 100) + "%";
 
     $("#bestsellers").innerHTML = [...PRODUCTS]
       .filter((p) => p.supplyDays <= 90 && p.category !== "tool")
@@ -204,14 +196,14 @@ const Pages = {
         </div></details>
         <details class="panel"><summary>Shipping &amp; returns</summary><div class="panel__body">
           <p>${p.rx
-            ? "Dispatched by our partner pharmacy in plain, tracked packaging, usually within 1–3 working days of approval. Free delivery on every prescription. Pharmacy rules mean prescription medicines can't be returned once dispatched; if anything is wrong with your order, message your care team."
-            : `Tracked delivery in 1–3 working days. Free over ${money(STORE.freeShippingOver)}, otherwise $4.95. Return anything within ${STORE.returnDays} days, opened or not, with the prepaid label in your box.`} <a href="help.html">Full details</a>.</p>
+            ? "Ships from our partner pharmacy once a licensed clinician approves your order. Prescription medicines can't be returned."
+            : `Free shipping over ${money(STORE.freeShippingOver)}, otherwise $4.95.`} <a href="help.html">Shipping and returns</a>.</p>
         </div></details>
       </div>`;
 
     document.body.insertAdjacentHTML("beforeend", `<div class="sticky-buy">
       <p><strong>${esc(p.name)}</strong><span class="muted">From ${money(subPrice(p))} with subscription</span></p>
-      <button class="btn" type="submit" form="buy">${out ? "Reserve" : "Add to bag"}</button>
+      <button class="btn" type="submit" form="buy" ${out ? "disabled" : ""}>${out ? "Out of stock" : "Add to bag"}</button>
     </div>`);
 
     const remind = $("#remind");
@@ -230,12 +222,12 @@ const Pages = {
       const reminders = store("cv-reminders", []);
       reminders.push({ id: p.id, email: $("#remind-email").value, days: p.supplyDays - 7 });
       save("cv-reminders", reminders);
-      remind.innerHTML = `<p style="margin:0"><strong>Reminder set.</strong> <span class="small muted">One email on day ${p.supplyDays - 7}. Nothing else.</span></p>`;
+      remind.innerHTML = `<p style="margin:0"><strong>Reminder set.</strong> <span class="small muted">We'll email you around day ${p.supplyDays - 7}.</span></p>`;
     });
     }
 
     const pairs = p.pairsWith.map(byId).filter(Boolean);
-    $("#pairs-title").textContent = out ? "In stock now, and pairs well" : "Pair it with";
+    $("#pairs-title").textContent = "Pair it with";
     $("#pairs").innerHTML = pairs.map(productCard).join("");
 
     $("#reviews-summary").innerHTML = `${stars(p.rating)} <span class="muted">${p.rating} average from ${p.reviewCount} verified buyers</span>`;

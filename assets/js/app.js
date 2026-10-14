@@ -124,12 +124,12 @@ function productArt(p) {
 
 function stockBadge(p, long = false) {
   if (p.stock.status === "out") {
-    return `<span class="stock stock--out">Back ${formatDate(p.stock.restock)}${long ? " · reserve yours now" : ""}</span>`;
+    return `<span class="stock stock--out">Out of stock</span>`;
   }
   if (p.stock.status === "low") {
-    return `<span class="stock stock--low">Only ${p.stock.qty} left${long ? ` · more arriving ${formatDate(p.stock.restock)}` : ""}</span>`;
+    return `<span class="stock stock--low">Only ${p.stock.qty} left</span>`;
   }
-  return `<span class="stock stock--in">In stock${long ? ` · dispatched today if ordered before ${STORE.dispatchCutoff}` : ""}</span>`;
+  return `<span class="stock stock--in">In stock</span>`;
 }
 
 /* ---------- Product card ---------- */
@@ -151,7 +151,7 @@ function productCard(p) {
         <p class="card__price">${money(p.price)} <span class="muted">· ${esc(p.size.split(" ·")[0])}</span></p>
         <p class="card__sub">${money(subPrice(p))} on subscription</p>
       </div>
-      <button class="quick" data-add="${p.id}" aria-label="Add ${esc(p.name)} to bag">${p.stock.status === "out" ? "Reserve" : "Add +"}</button>
+      ${p.stock.status === "out" ? `<span class="quick quick--off">Sold out</span>` : `<button class="quick" data-add="${p.id}" aria-label="Add ${esc(p.name)} to bag">Add +</button>`}
     </div>
   </article>`;
 }
@@ -160,8 +160,7 @@ function productCard(p) {
 
 const cart = {
   items: store("cv-cart", []),
-  samples: store("cv-samples", []),
-  persist() { save("cv-cart", this.items); save("cv-samples", this.samples); renderCart(); },
+  persist() { save("cv-cart", this.items); renderCart(); },
   add(id, mode = "once", every = null, qty = 1) {
     const p = byId(id);
     const line = this.items.find((l) => l.id === id && l.mode === mode);
@@ -196,9 +195,6 @@ function renderCart() {
 
   const subtotal = cart.subtotal();
   const remaining = STORE.freeShippingOver - subtotal;
-  const inCart = new Set(cart.items.map((l) => l.id));
-  const sampleChoices = PRODUCTS.filter((p) => !inCart.has(p.id) && !p.rx && p.category !== "tool" && p.stock.status !== "out").slice(0, 6);
-  cart.samples = cart.samples.filter((id) => sampleChoices.some((p) => p.id === id));
 
   body.innerHTML = `
     <div class="ship-meter">
@@ -225,16 +221,10 @@ function renderCart() {
             </div>
             <span>${money(l.qty * (l.mode === "sub" ? subPrice(p) : p.price))}</span>
           </div>
-          ${p.stock.status === "out" ? `<p class="small note">Reserved — ships ${formatDate(p.stock.restock)}. We won't charge until it ships.</p>` : ""}
         </div>
       </li>`;
     }).join("")}</ul>
-    <div class="samples">
-      <p class="eyebrow">Choose 2 complimentary samples</p>
-      <div class="samples__grid">${sampleChoices.map((p) => `<label class="chip-check">
-        <input type="checkbox" value="${p.id}" ${cart.samples.includes(p.id) ? "checked" : ""} ${!cart.samples.includes(p.id) && cart.samples.length >= 2 ? "disabled" : ""}>
-        <span>${esc(p.name)}</span></label>`).join("")}</div>
-    </div>`;
+    `;
 
   $("#cart-foot").innerHTML = `
     <div class="totals">
@@ -243,7 +233,6 @@ function renderCart() {
     </div>
     ${cart.items.some((l) => byId(l.id).rx) ? `<p class="small muted center">Your bag has an Rx item. Checkout includes a quick 4-question health check.</p>` : ""}
     <button class="btn btn--block" id="checkout">Checkout</button>
-    <p class="small muted center">Every ${ordinal(STORE.loyaltyEvery)} order includes a full-size product of your choice.</p>
 `;
 }
 
@@ -256,7 +245,7 @@ function startCheckout() {
   $("#cart-body").innerHTML = `<form class="health" id="health">
     <p class="eyebrow">Quick health check</p>
     <h3>4 questions for your ${rxItems.map((p) => esc(p.name)).join(" and ")}</h3>
-    <p class="small muted">A licensed clinician checks these before your Rx item ships, usually the same day. You're only charged for it once it's approved.</p>
+    <p class="small muted">A licensed clinician reviews these before your Rx item ships.</p>
     <fieldset><legend>Are you 18 or over?</legend>
       <label class="choice"><input type="radio" name="adult" value="yes" required> Yes</label>
       <label class="choice"><input type="radio" name="adult" value="no"> No</label></fieldset>
@@ -296,11 +285,6 @@ function showPaymentNote(flag) {
   $("#health-back3").addEventListener("click", renderCart);
 }
 
-function ordinal(n) {
-  const s = ["th", "st", "nd", "rd"], v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
-}
-
 function bindCart() {
   document.addEventListener("click", (e) => {
     const t = e.target.closest("button");
@@ -325,10 +309,6 @@ function bindCart() {
   document.addEventListener("change", (e) => {
     const t = e.target;
     if (t.dataset.field === "every") cart.update(+t.dataset.line, { every: +t.value });
-    if (t.closest(".samples")) {
-      cart.samples = $$(".samples input:checked").map((i) => i.value);
-      cart.persist();
-    }
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
   $(".scrim").addEventListener("click", closeCart);
@@ -360,7 +340,6 @@ function renderChrome() {
     <div class="announce">
       <span>Free shipping over ${money(STORE.freeShippingOver)}</span>
       <span>Subscribe &amp; save 15%</span>
-      <span>Discreet, tracked delivery</span>
     </div>
     <header class="header">
       <div class="wrap header__inner">
@@ -381,7 +360,7 @@ function renderChrome() {
       <div class="wrap footer__grid">
         <div>
           <p class="logo">Coveted</p>
-          <p class="muted">Hard-to-find essentials for skin, hair and face. Always in stock, made for everyone.</p>
+          <p class="muted">Skin and hair treatments that work, made for everyone.</p>
         </div>
         <div>
           <p class="eyebrow">Shop</p>
@@ -393,21 +372,19 @@ function renderChrome() {
         </div>
         <div>
           <p class="eyebrow">Help</p>
-          <a href="help.html#shipping">Shipping</a>
-          <a href="help.html#returns">Returns</a>
+          <a href="help.html">Shipping &amp; returns</a>
           <a href="subscribe.html">Subscriptions</a>
-          <a href="help.html#stock">Our stock promise</a>
           <a href="journal.html">Journal</a>
         </div>
         <form class="newsletter js-newsletter">
-          <p class="eyebrow">One email a month</p>
-          <p class="muted small">New guides and restocks. Never more than one a month, never a countdown timer.</p>
+          <p class="eyebrow">Newsletter</p>
+          <p class="muted small">New products and guides.</p>
           <div class="field-row">
             <label class="sr" for="nl-email">Email</label>
             <input id="nl-email" type="email" required placeholder="Email address">
             <button class="btn btn--ghost">Join</button>
           </div>
-          <p class="small note" hidden>You're on the list. See you next month.</p>
+          <p class="small note" hidden>You're on the list.</p>
         </form>
       </div>
       <div class="wrap footer__base small muted">
