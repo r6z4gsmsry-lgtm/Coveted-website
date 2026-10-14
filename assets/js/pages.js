@@ -62,28 +62,23 @@ function buyBlock(p, out) {
 
 const Pages = {
   home() {
-    // Size the wordmark so it spans the full content width exactly.
-    const brand = $(".hero__brand");
-    const fit = () => {
-      brand.style.fontSize = "";
-      const box = getComputedStyle(brand.parentElement);
-      const width = brand.parentElement.clientWidth - parseFloat(box.paddingLeft) - parseFloat(box.paddingRight);
-      const ratio = (width / brand.scrollWidth) * 0.99;
-      brand.style.fontSize = parseFloat(getComputedStyle(brand).fontSize) * ratio + "px";
-    };
-    fit();
-    document.fonts?.ready.then(fit);
-    addEventListener("resize", fit);
+    // Hero lineup: tallest product in the middle, the rest stepping down either side.
+    const order = ["ghk-cu", "tretinoin", "finasteride", "spf-50", "tanner", "hydrocortisone"];
+    $("#hero-stage").innerHTML = `<span class="hero2__sun" aria-hidden="true"></span>` + order.map(byId).filter(Boolean)
+      .map((p, i) => `<a class="hero2__item hero2__item--${i}" href="product.html#${p.id}" aria-label="${esc(p.name)}">${productArt(p)}</a>`).join("");
 
+    $$(".promo__art").forEach((el) => {
+      el.innerHTML = el.dataset.art.split(",").map(byId).filter(Boolean).map(productArt).join("");
+    });
 
     $("#concern-grid").innerHTML = CONCERNS.map((c) => {
       const n = PRODUCTS.filter((p) => p.concerns.includes(c.id)).length;
-      return `<a class="concern" href="shop.html#${c.id}" style="--tint:${c.tint}">
-        <div><h3>${c.name}</h3><p>${c.line}</p></div>
-        <span>${n} product${n === 1 ? "" : "s"} →</span>
+      return `<a class="concern-tile" href="shop.html#${c.id}" style="--tint:${c.tint}">
+        <span class="concern-tile__dot"></span>
+        <strong>${c.name}</strong>
+        <span class="small muted">${n} product${n === 1 ? "" : "s"}</span>
       </a>`;
     }).join("");
-
 
     $("#bestsellers").innerHTML = PRODUCTS.map(productCard).join("");
 
@@ -95,7 +90,6 @@ const Pages = {
       <div class="sub-demo__row"><span>Saved over a year</span><span>${money((p.price - subPrice(p)) * 12)}</span></div>
       <div class="timeline">
         <span class="is-key">Day 0<br>First order</span>
-        <span>Day 27<br>One reminder email</span>
         <span class="is-key">Day 30<br>Next tube arrives</span>
       </div>`;
 

@@ -34,90 +34,62 @@ const freqLabel = (d) => d % 30 === 0 ? `Every ${d / 30 === 1 ? "month" : d / 30
 
 /* ---------- Product imagery (inline SVG, no image assets needed) ---------- */
 
-function labelLines(name) {
-  const parts = name.split(" + ");
-  const lines = [];
-  parts.forEach((part, i) => {
-    const words = (i ? "+ " + part : part).split(" ");
-    let line = "";
-    words.forEach((w) => {
-      if ((line + " " + w).trim().length > 12 && line) { lines.push(line); line = w; }
-      else line = (line + " " + w).trim();
-    });
-    if (line) lines.push(line);
-  });
-  return lines.slice(0, 3);
+/* Packaging is drawn per product from its colour, cap and label fields in data.js. */
+
+function shade(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  const c = (v) => Math.max(0, Math.min(255, Math.round(v + amt * 255)));
+  return "#" + [n >> 16, (n >> 8) & 255, n & 255].map((v) => c(v).toString(16).padStart(2, "0")).join("");
 }
 
-function label(p, x, y, w) {
-  const lines = labelLines(p.name);
-  const h = 34 + lines.length * 11;
-  const text = lines.map((l, i) => `<text x="${x + w / 2}" y="${y + 30 + i * 11}" text-anchor="middle" font-size="7" fill="#1d1c1a">${esc(l)}</text>`).join("");
-  return `<g font-family="Geist Mono, monospace">
-    <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f4efe4"/>
-    <text x="${x + w / 2}" y="${y + 13}" text-anchor="middle" font-size="6.5" letter-spacing="2" fill="#6b665d">COVETED</text>
-    <line x1="${x + 8}" y1="${y + 18}" x2="${x + w - 8}" y2="${y + 18}" stroke="#bdb5a5" stroke-width=".6"/>
+function label(p, x, y, w, h) {
+  const lines = p.label || [p.name];
+  const longest = Math.max(...lines.map((l) => l.length));
+  const size = Math.min(15, (w - 10) / (longest * 0.56));
+  const top = y + 22;
+  const text = lines.map((l, i) => `<text x="${x + w / 2}" y="${top + size * (i + 1)}" text-anchor="middle" font-family="Familjen Grotesk, Arial, sans-serif" font-weight="600" font-size="${size.toFixed(1)}" letter-spacing="-.2" fill="#1d1c1a">${esc(l)}</text>`).join("");
+  return `<g>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="#fbf7ef"/>
+    <text x="${x + w / 2}" y="${y + 13}" text-anchor="middle" font-family="Geist Mono, monospace" font-size="5.5" letter-spacing="1.6" fill="#6b665d">COVETED</text>
     ${text}
-    <text x="${x + w / 2}" y="${y + h - 6}" text-anchor="middle" font-size="5.5" fill="#6b665d">${esc(p.size.split(" ·")[0])}</text>
+    <text x="${x + w / 2}" y="${top + size * lines.length + 12}" text-anchor="middle" font-family="Geist Mono, monospace" font-size="5.6" fill="#4b4740">${esc(p.sub || "")}</text>
+    <rect x="${x}" y="${y + h - 7}" width="${w}" height="7" fill="${p.color}" opacity=".85"/>
   </g>`;
 }
 
 function productArt(p) {
-  const amber = `<linearGradient id="g-${p.id}" x1="0" x2="1"><stop offset="0" stop-color="#5a3412"/><stop offset=".45" stop-color="#8a531f"/><stop offset="1" stop-color="#4e2c0f"/></linearGradient>`;
-  const fill = `url(#g-${p.id})`;
+  const color = p.color || "#8a531f";
+  const cap = p.cap || "#1d1c1a";
+  const g = `g-${p.id}`;
+  const defs = `<linearGradient id="${g}" x1="0" x2="1">
+      <stop offset="0" stop-color="${shade(color, -.12)}"/><stop offset=".42" stop-color="${shade(color, .1)}"/><stop offset="1" stop-color="${shade(color, -.16)}"/></linearGradient>`;
+  const fill = `url(#${g})`;
+  const sheen = (x, y, h) => `<rect x="${x}" y="${y}" width="7" height="${h}" rx="3.5" fill="#fff" opacity=".22"/>`;
   let body = "";
   switch (p.bottle) {
-    case "dropper":
-      body = `<rect x="64" y="104" width="72" height="136" rx="8" fill="${fill}"/>
-        <rect x="84" y="90" width="32" height="16" fill="#2b2925"/>
-        <rect x="88" y="44" width="24" height="50" rx="12" fill="#1d1c1a"/>
-        ${label(p, 70, 140, 60)}`;
-      break;
-    case "pump":
-      body = `<rect x="60" y="92" width="80" height="148" rx="10" fill="${fill}"/>
-        <rect x="88" y="70" width="24" height="24" fill="#2b2925"/>
-        <rect x="94" y="46" width="12" height="26" fill="#2b2925"/>
-        <rect x="94" y="46" width="44" height="9" rx="2" fill="#2b2925"/>
-        ${label(p, 68, 132, 64)}`;
-      break;
     case "tube":
-      body = `<path d="M66 40 H134 L128 206 H72 Z" fill="#e6e0d3" stroke="#cbc3b3"/>
-        <rect x="66" y="34" width="68" height="8" fill="#d8d1c2"/>
-        <rect x="80" y="206" width="40" height="34" rx="3" fill="#1d1c1a"/>
-        ${label(p, 74, 92, 52)}`;
-      break;
-    case "roller":
-      body = `<rect x="76" y="110" width="48" height="130" rx="8" fill="${fill}"/>
-        <rect x="84" y="94" width="32" height="18" fill="#2b2925"/>
-        <circle cx="100" cy="88" r="9" fill="#bfbab0" stroke="#8f8a80"/>
-        <rect x="80" y="40" width="40" height="50" rx="6" fill="#1d1c1a" opacity=".92"/>
-        ${label(p, 79, 140, 42)}`;
-      break;
-    case "foam":
-      body = `<rect x="66" y="70" width="68" height="170" rx="6" fill="#d9d6cf" stroke="#bdb8ad"/>
-        <rect x="66" y="70" width="68" height="10" fill="#c6c2b9"/>
-        <path d="M74 70 V48 Q100 30 126 48 V70 Z" fill="#1d1c1a"/>
-        ${label(p, 72, 120, 56)}`;
+      body = `<path d="M60 36 H140 L131 202 Q130 210 122 210 H78 Q70 210 69 202 Z" fill="${fill}"/>
+        <rect x="58" y="28" width="84" height="11" rx="2" fill="${shade(color, -.2)}"/>
+        <rect x="76" y="208" width="48" height="34" rx="7" fill="${cap}"/>
+        ${sheen(70, 46, 140)}
+        ${label(p, 73, 74, 54, 96)}`;
       break;
     case "capsules":
-      body = `<rect x="56" y="100" width="88" height="140" rx="12" fill="${fill}"/>
-        <rect x="62" y="70" width="76" height="34" rx="4" fill="#1d1c1a"/>
-        ${label(p, 64, 136, 72)}`;
+      body = `<rect x="54" y="96" width="92" height="144" rx="16" fill="${fill}"/>
+        <rect x="58" y="62" width="84" height="38" rx="7" fill="${cap}"/>
+        <g stroke="${shade(cap, .12)}" stroke-width="1.4">${Array.from({ length: 9 }, (_, i) => `<line x1="${66 + i * 8.5}" y1="68" x2="${66 + i * 8.5}" y2="94"/>`).join("")}</g>
+        ${sheen(62, 108, 118)}
+        ${label(p, 64, 124, 72, 92)}`;
       break;
-    case "tin":
-      body = `<rect x="44" y="120" width="112" height="100" rx="10" fill="#cfcac0" stroke="#b6b0a4"/>
-        <rect x="40" y="108" width="120" height="22" rx="8" fill="#b9b3a7"/>
-        ${label(p, 64, 138, 72)}`;
-      break;
-    case "roller-tool":
-      body = `<rect x="94" y="96" width="12" height="144" rx="6" fill="#1d1c1a"/>
-        <rect x="90" y="88" width="20" height="12" fill="#8f8a80"/>
-        <rect x="56" y="48" width="88" height="40" rx="18" fill="#bfbab0" stroke="#8f8a80"/>
-        <g stroke="#8f8a80" stroke-width="1">${Array.from({ length: 11 }, (_, i) => `<line x1="${62 + i * 7.6}" y1="50" x2="${62 + i * 7.6}" y2="86"/>`).join("")}</g>`;
-      break;
+    default: // dropper
+      body = `<rect x="60" y="100" width="80" height="140" rx="16" fill="${fill}"/>
+        <rect x="83" y="84" width="34" height="20" rx="3" fill="${shade(cap, .08)}"/>
+        <rect x="87" y="36" width="26" height="52" rx="13" fill="${cap}"/>
+        ${sheen(67, 112, 112)}
+        ${label(p, 69, 128, 62, 92)}`;
   }
-  return `<svg viewBox="0 0 200 260" role="img" aria-label="${esc(p.name)}, ${esc(p.size)}"><defs>${amber}</defs>
-    <ellipse cx="100" cy="242" rx="58" ry="5" fill="#000" opacity=".08"/>${body}</svg>`;
+  return `<svg viewBox="0 0 200 260" role="img" aria-label="${esc(p.name)}, ${esc(p.size)}"><defs>${defs}</defs>
+    <ellipse cx="100" cy="244" rx="60" ry="6" fill="#000" opacity=".1"/>${body}</svg>`;
 }
 
 /* ---------- Stock ---------- */
@@ -134,24 +106,33 @@ function stockBadge(p, long = false) {
 
 /* ---------- Product card ---------- */
 
-const tintOf = (p) => (CONCERNS.find((c) => c.id === p.concerns[0]) || {}).tint || "var(--sunk)";
+const tintOf = (p) => p.bg || (CONCERNS.find((c) => c.id === p.concerns[0]) || {}).tint || "var(--sunk)";
 
 function productCard(p) {
-  return `<article class="card" style="--tint:${tintOf(p)}">
+  const out = p.stock.status === "out";
+  const concern = CONCERNS.find((c) => c.id === p.concerns[0]);
+  return `<article class="card" style="--tint:${tintOf(p)};--pack:${p.color || "var(--green)"}">
     <a href="product.html#${p.id}" class="card__link">
-      <div class="card__art">${productArt(p)}${p.rx ? `<span class="tag tag--rx">Rx</span>` : p.hardToSource ? `<span class="tag">Hard to source</span>` : ""}</div>
+      <div class="card__art">
+        ${productArt(p)}
+        <div class="card__badges">
+          ${p.badge ? `<span class="badge">${esc(p.badge)}</span>` : ""}
+          ${p.rx && p.badge !== "Rx" ? `<span class="badge badge--rx">Rx</span>` : ""}
+        </div>
+      </div>
       <div class="card__body">
-        <p class="card__problem">${esc(CONCERNS.find((c) => c.id === p.concerns[0]).name)}</p>
+        <p class="card__rating">${stars(p.rating)} <span>${p.rating} (${p.reviewCount.toLocaleString("en-US")})</span></p>
         <h3 class="card__name">${esc(p.name)}</h3>
-        <p class="card__format">${esc(p.format)}</p>
+        <p class="card__format">${esc(p.benefit || p.format)}</p>
+        <p class="card__concern">${esc(concern.name)}</p>
       </div>
     </a>
     <div class="card__foot">
       <div>
-        <p class="card__price">${money(p.price)} <span class="muted">· ${esc(p.size.split(" ·")[0])}</span></p>
-        <p class="card__sub">${money(subPrice(p))} on subscription</p>
+        <p class="card__price">${money(p.price)}</p>
+        <p class="card__sub">${money(subPrice(p))} with subscribe</p>
       </div>
-      ${p.stock.status === "out" ? `<span class="quick quick--off">Sold out</span>` : `<button class="quick" data-add="${p.id}" aria-label="Add ${esc(p.name)} to bag">Add +</button>`}
+      ${out ? `<span class="quick quick--off">Sold out</span>` : `<button class="quick" data-add="${p.id}" aria-label="Add ${esc(p.name)} to bag">Add to bag</button>`}
     </div>
   </article>`;
 }
@@ -204,7 +185,7 @@ function renderCart() {
     <ul class="lines">${cart.items.map((l, i) => {
       const p = byId(l.id);
       return `<li class="line">
-        <div class="line__art">${productArt(p)}</div>
+        <div class="line__art" style="--tint:${tintOf(p)}">${productArt(p)}</div>
         <div class="line__info">
           <p class="line__name">${esc(p.name)}</p>
           <p class="muted small">${esc(p.size)}</p>

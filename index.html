@@ -13,45 +13,69 @@
 <body data-page="home">
 <main id="main">
 
-  <section class="hero">
-    <div class="wrap hero__inner">
-      <div class="hero__top">
-        <p class="eyebrow">Skin · Hair · Face</p>
-        <p class="eyebrow">Est. 2026</p>
-      </div>
-      <h1 class="hero__brand" aria-label="Coveted">Coveted</h1>
-      <hr class="rule">
-      <div class="hero__foot">
-        <p class="lede">Six essentials for skin, hair and tan, from tretinoin to tanning drops. Each one does a single job well. For anyone.</p>
-        <div class="hero__actions">
-          <a class="btn" href="#shop">Shop the range</a>
-          <a class="btn btn--ghost" href="shop.html">Shop all</a>
+  <section class="hero2">
+    <div class="wrap hero2__inner">
+      <div class="hero2__copy">
+        <a class="pill" href="product.html#tanner"><span>New</span> Glow Drops: a natural tan, no sun</a>
+        <h1>Skin, hair &amp; glow. <em>Sorted.</em></h1>
+        <p class="lede">Six essentials that each do one job really well, from tretinoin to tanning drops. Made for everyone.</p>
+        <div class="hero2__actions">
+          <a class="btn btn--lg" href="#shop">Shop the range</a>
+          <a class="btn btn--ghost btn--lg" href="subscribe.html">Subscribe &amp; save 15%</a>
         </div>
+        <ul class="hero2__ticks">
+          <li>Free shipping over $50</li>
+          <li>15% off with subscribe</li>
+          <li>Rx in 4 quick questions</li>
+        </ul>
       </div>
+      <div class="hero2__stage" id="hero-stage" aria-label="The Coveted range"></div>
     </div>
   </section>
 
-  <section class="section" id="concerns">
+  <section class="section section--tight" id="concerns">
     <div class="wrap">
       <div class="section__head">
-        <h2>What would you like to work on?</h2>
-        <p class="muted">Start wherever you like. Everything we stock is made for one clear purpose, and works for everyone.</p>
+        <h2>Shop by concern</h2>
       </div>
-      <div class="concerns" id="concern-grid"></div>
+      <div class="concern-row" id="concern-grid"></div>
     </div>
   </section>
 
-  <section class="section" id="shop">
+  <section class="section section--tight" id="shop">
     <div class="wrap">
       <div class="section__head">
         <h2>The range</h2>
-        <a class="btn btn--ghost" href="shop.html">View all products</a>
+        <a class="link-arrow" href="shop.html">Shop all →</a>
       </div>
       <div class="grid grid--3" id="bestsellers"></div>
     </div>
   </section>
 
-  <section class="section section--surface section--line">
+  <section class="section section--tight">
+    <div class="wrap promos">
+      <a class="promo promo--green" href="shop.html#prescription">
+        <div class="promo__copy">
+          <p class="eyebrow">Prescription, made easy</p>
+          <h2>Rx, minus the hassle.</h2>
+          <p>Tretinoin and finasteride go in your bag like anything else. Four quick questions at checkout and you're done.</p>
+          <span class="btn">Shop Rx</span>
+        </div>
+        <div class="promo__art" data-art="tretinoin,finasteride"></div>
+      </a>
+      <a class="promo promo--sun" href="product.html#tanner">
+        <div class="promo__copy">
+          <p class="eyebrow">The glow duo</p>
+          <h2>Glow, no sun.</h2>
+          <p>Glow Drops for the colour, SPF 50+ PA++++ for the protection. The tan you want, minus the damage.</p>
+          <span class="btn">Shop the duo</span>
+        </div>
+        <div class="promo__art" data-art="tanner,spf-50"></div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section section--sage">
     <div class="wrap split">
       <div>
         <p class="eyebrow">Subscribe &amp; save</p>
@@ -71,7 +95,7 @@
     <div class="wrap">
       <div class="section__head">
         <h2>How we choose what we sell.</h2>
-        <a class="btn btn--ghost" href="journal.html">Read the journal</a>
+        <a class="link-arrow" href="journal.html">Read the journal →</a>
       </div>
       <div class="approach">
         <div><h3>A clear purpose</h3><p class="muted">Every product is chosen to do one thing well. If it doesn't earn its place, we don't stock it.</p></div>
