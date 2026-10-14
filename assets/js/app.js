@@ -5,7 +5,7 @@ const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const money = (n) => "$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
 const subPrice = (p) => p.price * (1 - STORE.subscribeDiscount);
 const byId = (id) => PRODUCTS.find((p) => p.id === id);
-/* Pages are addressed with a bare hash token (product.html#retinal-01, shop.html#hairline),
+/* Pages are addressed with a bare hash token (product.html#tretinoin, shop.html#hairline),
    which works on any static host. Old ?id= style links still resolve. */
 const params = new URLSearchParams(location.search);
 const route = decodeURIComponent(location.hash.slice(1));
@@ -137,7 +137,7 @@ function stockBadge(p, long = false) {
 function productCard(p) {
   return `<article class="card">
     <a href="product.html#${p.id}" class="card__link">
-      <div class="card__art">${productArt(p)}${p.hardToSource ? `<span class="tag">Hard to source</span>` : ""}</div>
+      <div class="card__art">${productArt(p)}${p.rx ? `<span class="tag tag--rx">Prescription</span>` : p.hardToSource ? `<span class="tag">Hard to source</span>` : ""}</div>
       <div class="card__body">
         <p class="card__problem">${esc(CONCERNS.find((c) => c.id === p.concerns[0]).name)}</p>
         <h3 class="card__name">${esc(p.name)}</h3>
@@ -146,8 +146,9 @@ function productCard(p) {
     </a>
     <div class="card__foot">
       <div>
-        <p class="card__price">${money(p.price)} <span class="muted">· ${esc(p.size.split(" ·")[0])}</span></p>
-        <p class="card__sub">${money(subPrice(p))} on subscription</p>
+        ${p.rx ? `<p class="card__price">From ${money(p.price)}<span class="muted"> / month</span></p>
+        <p class="card__sub">Includes online consultation</p>` : `<p class="card__price">${money(p.price)} <span class="muted">· ${esc(p.size.split(" ·")[0])}</span></p>
+        <p class="card__sub">${money(subPrice(p))} on subscription</p>`}
       </div>
       ${stockBadge(p)}
     </div>
@@ -162,6 +163,7 @@ const cart = {
   persist() { save("cv-cart", this.items); save("cv-samples", this.samples); renderCart(); },
   add(id, mode = "once", every = null, qty = 1) {
     const p = byId(id);
+    if (p.rx) { location.href = "consult.html#" + id; return; } // prescriptions go through a consultation
     const line = this.items.find((l) => l.id === id && l.mode === mode);
     if (line) line.qty += qty;
     else this.items.push({ id, mode, every: every || p.supplyDays, qty });
@@ -195,7 +197,7 @@ function renderCart() {
   const subtotal = cart.subtotal();
   const remaining = STORE.freeShippingOver - subtotal;
   const inCart = new Set(cart.items.map((l) => l.id));
-  const sampleChoices = PRODUCTS.filter((p) => !inCart.has(p.id) && p.category !== "tool" && p.stock.status !== "out").slice(0, 6);
+  const sampleChoices = PRODUCTS.filter((p) => !inCart.has(p.id) && !p.rx && p.category !== "tool" && p.stock.status !== "out").slice(0, 6);
   cart.samples = cart.samples.filter((id) => sampleChoices.some((p) => p.id === id));
 
   body.innerHTML = `
@@ -293,7 +295,7 @@ function renderChrome() {
   const page = document.body.dataset.page;
   const nav = [
     ["shop", "shop.html", "Shop"],
-    ["concerns", "./#concerns", "Concerns"],
+    ["how", "./#how", "How it works"],
     ["journal", "journal.html", "Journal"],
     ["subscribe", "subscribe.html", "Subscribe & save"],
     ["help", "help.html", "Help"]
@@ -301,9 +303,9 @@ function renderChrome() {
   document.body.insertAdjacentHTML("afterbegin", `
     <a class="skip" href="#main">Skip to content</a>
     <div class="announce">
-      <span>Free shipping over ${money(STORE.freeShippingOver)}</span>
-      <span>Dispatched same day before ${STORE.dispatchCutoff}</span>
-      <span>${STORE.returnDays}-day returns, even opened</span>
+      <span>Free online consultation</span>
+      <span>Licensed clinicians</span>
+      <span>Discreet, tracked delivery</span>
     </div>
     <header class="header">
       <div class="wrap header__inner">
@@ -355,7 +357,7 @@ function renderChrome() {
       </div>
       <div class="wrap footer__base small muted">
         <span>© ${new Date().getFullYear()} Coveted</span>
-        <span>Information on this site is not medical advice. Speak to a doctor about persistent skin or hair concerns.</span>
+        <span>Prescription treatments are only available after an online consultation and approval by a licensed clinician. Information on this site is not medical advice.</span>
       </div>
     </footer>
     <div class="scrim"></div>

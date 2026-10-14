@@ -22,6 +22,72 @@ function guideCard(g) {
   </a>`;
 }
 
+function buyBlock(p, out) {
+  return `
+      <form class="buy" id="buy">
+        ${stockBadge(p, true)}
+        <label class="option">
+          <input type="radio" name="mode" value="sub" checked>
+          <span>
+            <strong>Subscribe &amp; save ${STORE.subscribeDiscount * 100}%</strong>
+            <span class="small muted">One lasts about ${p.supplyDays} days, so the next arrives before you run out. Skip or cancel any time.</span>
+            <select class="select" name="every" aria-label="Delivery frequency">
+              ${frequencyOptions(p).map((d) => `<option value="${d}" ${d === p.supplyDays ? "selected" : ""}>${freqLabel(d)}${d === p.supplyDays ? " · recommended" : ""}</option>`).join("")}
+            </select>
+          </span>
+          <span class="price">${money(subPrice(p))}<s>${money(p.price)}</s></span>
+        </label>
+        <label class="option">
+          <input type="radio" name="mode" value="once">
+          <span><strong>One-time purchase</strong><span class="small muted">Optional reorder reminder when you're running low.</span></span>
+          <span class="price">${money(p.price)}</span>
+        </label>
+        <button class="btn btn--block" type="submit">${out ? `Reserve — ships ${formatDate(p.stock.restock)}` : "Add to bag"}</button>
+        ${out ? `<p class="small muted" style="margin:0">Reserving is free. You're charged only when it ships, and we'll send one email on dispatch.</p>` : ""}
+        <ul class="reassure">
+          <li>Free shipping over ${money(STORE.freeShippingOver)}. Weekday orders before ${STORE.dispatchCutoff} dispatched same day</li>
+          <li>${STORE.returnDays}-day returns, even if opened</li>
+          <li>Two free samples of your choice in every order</li>
+        </ul>
+        <div class="record">
+          In stock ${p.stock.record} of the last 365 days
+          <div class="bar"><span style="width:${(p.stock.record / 365) * 100}%"></span></div>
+        </div>
+      </form>
+
+      <div class="remind" id="remind" hidden style="margin-top:14px">
+        <p><strong>Reorder reminder</strong><br><span class="small muted">One ${esc(p.size.split(" ·")[0])} lasts about ${p.supplyDays} days. We'll send a single email on day ${p.supplyDays - 7} with a one-click reorder link. That's all.</span></p>
+        <form class="field-row" id="remind-form">
+          <label class="sr" for="remind-email">Email</label>
+          <input id="remind-email" type="email" required placeholder="Email address">
+          <button class="btn btn--ghost">Remind me</button>
+        </form>
+      </div>`;
+}
+
+/* Prescription products: no add-to-bag. The patient starts a consultation instead. */
+function rxBlock(p) {
+  return `
+      <div class="buy">
+        ${stockBadge(p)}
+        <div class="rx-box">
+          <p class="eyebrow" style="margin:0">Prescription treatment</p>
+          <p class="rx-box__price">From ${money(p.price)} <span class="muted">/ month</span></p>
+          <p class="small muted" style="margin:0">Includes your online consultation, ongoing clinician support, the medication and delivery. You're only charged if a clinician prescribes it.</p>
+          <ol class="rx-steps">
+            <li><strong>Answer a few questions</strong><span>About 5 minutes, online.</span></li>
+            <li><strong>A licensed clinician reviews</strong><span>Usually within 24 hours. They decide whether it's right for you.</span></li>
+            <li><strong>Delivered to your door</strong><span>From a licensed pharmacy, in plain packaging. Refills arrive monthly.</span></li>
+          </ol>
+          <a class="btn btn--block" href="consult.html#${p.id}">Start free consultation</a>
+        </div>
+        <div class="record">
+          In stock ${p.stock.record} of the last 365 days
+          <div class="bar"><span style="width:${(p.stock.record / 365) * 100}%"></span></div>
+        </div>
+      </div>`;
+}
+
 const Pages = {
   home() {
     // Size the wordmark so it spans the full content width exactly.
@@ -144,50 +210,12 @@ const Pages = {
         <tbody>${p.actives.map((a) => `<tr><td>${esc(a.name)}</td><td>${esc(a.pct)}</td></tr>`).join("")}</tbody>
       </table>
 
-      <form class="buy" id="buy">
-        ${stockBadge(p, true)}
-        <label class="option">
-          <input type="radio" name="mode" value="sub" checked>
-          <span>
-            <strong>Subscribe &amp; save ${STORE.subscribeDiscount * 100}%</strong>
-            <span class="small muted">One lasts about ${p.supplyDays} days, so the next arrives before you run out. Skip or cancel any time.</span>
-            <select class="select" name="every" aria-label="Delivery frequency">
-              ${frequencyOptions(p).map((d) => `<option value="${d}" ${d === p.supplyDays ? "selected" : ""}>${freqLabel(d)}${d === p.supplyDays ? " · recommended" : ""}</option>`).join("")}
-            </select>
-          </span>
-          <span class="price">${money(subPrice(p))}<s>${money(p.price)}</s></span>
-        </label>
-        <label class="option">
-          <input type="radio" name="mode" value="once">
-          <span><strong>One-time purchase</strong><span class="small muted">Optional reorder reminder when you're running low.</span></span>
-          <span class="price">${money(p.price)}</span>
-        </label>
-        <button class="btn btn--block" type="submit">${out ? `Reserve — ships ${formatDate(p.stock.restock)}` : "Add to bag"}</button>
-        ${out ? `<p class="small muted" style="margin:0">Reserving is free. You're charged only when it ships, and we'll send one email on dispatch.</p>` : ""}
-        <ul class="reassure">
-          <li>Free shipping over ${money(STORE.freeShippingOver)}. Weekday orders before ${STORE.dispatchCutoff} dispatched same day</li>
-          <li>${STORE.returnDays}-day returns, even if opened</li>
-          <li>Two free samples of your choice in every order</li>
-        </ul>
-        <div class="record">
-          In stock ${p.stock.record} of the last 365 days
-          <div class="bar"><span style="width:${(p.stock.record / 365) * 100}%"></span></div>
-        </div>
-      </form>
-
-      <div class="remind" id="remind" hidden style="margin-top:14px">
-        <p><strong>Reorder reminder</strong><br><span class="small muted">One ${esc(p.size.split(" ·")[0])} lasts about ${p.supplyDays} days. We'll send a single email on day ${p.supplyDays - 7} with a one-click reorder link. That's all.</span></p>
-        <form class="field-row" id="remind-form">
-          <label class="sr" for="remind-email">Email</label>
-          <input id="remind-email" type="email" required placeholder="Email address">
-          <button class="btn btn--ghost">Remind me</button>
-        </form>
-      </div>
+      ${p.rx ? rxBlock(p) : buyBlock(p, out)}
 
       <div style="margin-top:2rem">
-        <details class="panel" open><summary>How to use</summary><div class="panel__body">
+        <details class="panel" open><summary>${p.rx ? "How it's used" : "How to use"}</summary><div class="panel__body">
           <ol>${p.howTo.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
-          <p class="small muted" style="margin-top:1rem"><strong>Note:</strong> ${esc(p.avoidWith)}</p>
+          <p class="small muted" style="margin-top:1rem"><strong>${p.rx ? "Safety:" : "Note:"}</strong> ${esc(p.avoidWith)}${p.rx ? " Your clinician will confirm exact directions for you." : ""}</p>
         </div></details>
         <details class="panel"><summary>What to expect</summary><div class="panel__body results">
           ${p.results.map((r) => `<div><strong>${esc(r.when)}</strong><span>${esc(r.what)}</span></div>`).join("")}
@@ -196,11 +224,14 @@ const Pages = {
           <p class="inci">${esc(p.inci)}</p>
         </div></details>
         <details class="panel"><summary>Shipping &amp; returns</summary><div class="panel__body">
-          <p>Tracked delivery in 1–3 working days. Free over ${money(STORE.freeShippingOver)}, otherwise $4.95. Return anything within ${STORE.returnDays} days — opened or not — with the prepaid label in your box. <a href="help.html">Full details</a>.</p>
+          <p>${p.rx
+            ? "Dispatched by our partner pharmacy in plain, tracked packaging, usually within 1–3 working days of approval. Free delivery on every prescription. Pharmacy rules mean prescription medicines can't be returned once dispatched; if anything is wrong with your order, message your care team."
+            : `Tracked delivery in 1–3 working days. Free over ${money(STORE.freeShippingOver)}, otherwise $4.95. Return anything within ${STORE.returnDays} days, opened or not, with the prepaid label in your box.`} <a href="help.html">Full details</a>.</p>
         </div></details>
       </div>`;
 
     const remind = $("#remind");
+    if ($("#buy")) {
     $("#buy").addEventListener("change", (e) => {
       if (e.target.name === "mode") remind.hidden = e.target.value !== "once";
     });
@@ -217,6 +248,7 @@ const Pages = {
       save("cv-reminders", reminders);
       remind.innerHTML = `<p style="margin:0"><strong>Reminder set.</strong> <span class="small muted">One email on day ${p.supplyDays - 7}. Nothing else.</span></p>`;
     });
+    }
 
     const pairs = p.pairsWith.map(byId).filter(Boolean);
     $("#pairs-title").textContent = out ? "In stock now, and pairs well" : "Pair it with";
@@ -260,5 +292,107 @@ const Pages = {
       <p class="small muted" style="margin-top:3rem;border-top:1px solid var(--line);padding-top:1rem">This guide is general information, not medical advice. If you have a persistent or worsening concern, speak to a doctor or pharmacist.</p>`;
     $("#guide-products").innerHTML = g.products.map(byId).filter(Boolean).map(productCard).join("");
     $("#more-guides").innerHTML = GUIDES.filter((x) => x !== g).slice(0, 3).map(guideCard).join("");
+  },
+
+  /* Online consultation. This is a front-end preview: answers are never
+     stored or sent. Connect a telehealth platform to submit them to a
+     licensed clinician (see README). */
+  consult() {
+    const rxList = PRODUCTS.filter((p) => p.rx);
+    let p = byId(route) && byId(route).rx ? byId(route) : null;
+    const steps = ["Treatment", "About you", "Your health", "Review"];
+    let step = p ? 1 : 0;
+    const form = $("#consult");
+
+    const yesNo = (name, label) => `<fieldset class="q"><legend>${label}</legend>
+      <label class="choice"><input type="radio" name="${name}" value="yes" required> Yes</label>
+      <label class="choice"><input type="radio" name="${name}" value="no"> No</label></fieldset>`;
+
+    const screens = [
+      () => `<h2>What would you like help with?</h2>
+        <div class="choices">${rxList.map((x) => `<label class="choice choice--card"><input type="radio" name="product" value="${x.id}" required ${p && p.id === x.id ? "checked" : ""}>
+          <span><strong>${esc(x.name)}</strong><span class="small muted">${esc(x.problem)}</span></span></label>`).join("")}</div>`,
+      () => `<h2>About you</h2>
+        <fieldset class="q"><legend>Are you 18 or older?</legend>
+          <label class="choice"><input type="radio" name="adult" value="yes" required> Yes</label>
+          <label class="choice"><input type="radio" name="adult" value="no"> No</label></fieldset>
+        <fieldset class="q"><legend>Sex assigned at birth</legend>
+          <label class="choice"><input type="radio" name="sex" value="female" required> Female</label>
+          <label class="choice"><input type="radio" name="sex" value="male"> Male</label>
+          <p class="small muted">Some treatments aren't suitable during pregnancy, so your clinician needs to know this.</p></fieldset>
+        <label class="q" for="c-region"><span class="legend">Where do you live?</span>
+          <select class="select" id="c-region" name="region" required>
+            <option value="">Choose your state</option>${REGIONS.map((r) => `<option>${r}</option>`).join("")}
+          </select></label>`,
+      () => `<h2>Your health</h2>
+        ${yesNo("pregnant", "Are you pregnant, breastfeeding, or trying to conceive?")}
+        <fieldset class="q"><legend>Do any of these apply to you?</legend>
+          ${["Liver disease", "Heart condition or low blood pressure", "History of depression or anxiety", "Eczema, rosacea or very sensitive skin", "None of these"].map((c, i) =>
+            `<label class="choice"><input type="checkbox" name="conditions" value="${c}" id="c-cond-${i}"> ${c}</label>`).join("")}</fieldset>
+        <label class="q" for="c-meds"><span class="legend">Medications and supplements you take</span>
+          <textarea class="select" id="c-meds" name="meds" rows="3" placeholder="Include anything prescribed or over the counter. Write none if none."></textarea></label>
+        <label class="q" for="c-photo"><span class="legend">Photos of the area (optional)</span>
+          <input type="file" id="c-photo" name="photos" accept="image/*" multiple>
+          <span class="small muted">Clear, well-lit photos help your clinician. In this preview they aren't uploaded anywhere.</span></label>`,
+      () => {
+        const d = { get: (k) => answers[k] };
+        const flags = [];
+        if (d.get("pregnant") === "yes" && ["tretinoin", "finasteride", "topical-finmin", "pigment-formula"].includes(p.id))
+          flags.push("This treatment isn't used during pregnancy or while trying to conceive. Your clinician will suggest safe alternatives.");
+        if (p.id === "finasteride" && d.get("sex") === "female")
+          flags.push("Finasteride tablets are rarely prescribed to women. Your clinician may recommend a different option.");
+        return `<h2>Review and submit</h2>
+          <dl class="review-list">
+            <div><dt>Treatment</dt><dd>${esc(p.name)}</dd></div>
+            <div><dt>Plan</dt><dd>From ${money(p.price)} / month, only charged if prescribed</dd></div>
+            <div><dt>State</dt><dd>${esc(d.get("region") || "")}</dd></div>
+          </dl>
+          ${flags.map((f) => `<p class="flag">${esc(f)}</p>`).join("")}
+          <label class="choice"><input type="checkbox" name="consent" required> I confirm my answers are accurate and agree to an online consultation with a licensed clinician.</label>`;
+      }
+    ];
+
+    function render() {
+      if (step > 0 && !p) step = 0;
+      $("#consult-steps").innerHTML = steps.map((t, i) => `<li ${i === step ? 'aria-current="step"' : ""} class="${i < step ? "is-done" : ""}">${t}</li>`).join("");
+      $("#consult-body").innerHTML = screens[step]();
+      $("#consult-back").hidden = step === 0;
+      $("#consult-next").textContent = step === screens.length - 1 ? "Submit consultation" : "Continue";
+      $("#consult-product").innerHTML = p ? `<div class="consult__art">${productArt(p)}</div><p class="eyebrow" style="margin:0">Your treatment</p><h3>${esc(p.name)}</h3><p class="small muted">${esc(p.format)}</p><p>From ${money(p.price)} <span class="muted">/ month</span></p>` : `<p class="muted">Choose a treatment to get started.</p>`;
+    }
+
+    // Keep answers in the form while moving between steps by hiding, not removing, earlier screens.
+    const answers = {};
+    function remember() { new FormData(form).forEach((v, k) => { answers[k] = v; }); }
+    function restore() {
+      Object.entries(answers).forEach(([k, v]) => {
+        $$(`[name="${k}"]`, form).forEach((el) => {
+          if (el.type === "radio" || el.type === "checkbox") el.checked = el.value === v || el.checked;
+          else if (el.type !== "file") el.value = v;
+        });
+      });
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (step === 0) p = byId(new FormData(form).get("product"));
+      if (step === 1 && new FormData(form).get("adult") === "no") {
+        $("#consult-body").innerHTML = `<h2>We can't treat you yet</h2><p>Our clinicians can only treat people aged 18 and over. Please speak to your doctor or a local pharmacist.</p>`;
+        $("#consult-next").hidden = true;
+        return;
+      }
+      remember();
+      if (step === screens.length - 1) {
+        form.hidden = true;
+        $("#consult-done").hidden = false;
+        $("#consult-steps").innerHTML = steps.map((t) => `<li class="is-done">${t}</li>`).join("");
+        return;
+      }
+      step++;
+      render(); restore();
+      window.scrollTo({ top: 0 });
+    });
+    $("#consult-back").addEventListener("click", () => { remember(); step--; render(); restore(); });
+    render();
   }
 };

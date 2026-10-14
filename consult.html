@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Online consultation | Coveted</title>
+  <meta name="description" content="A free online consultation with a licensed clinician for prescription skin and hair treatments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="how">
+<main id="main">
+  <div class="wrap section consult">
+    <div>
+      <p class="eyebrow">Online consultation</p>
+      <ol class="consult__steps" id="consult-steps" aria-label="Progress"></ol>
+      <form id="consult" class="consult__form">
+        <div id="consult-body"></div>
+        <div class="consult__nav">
+          <button type="button" class="btn btn--ghost" id="consult-back">Back</button>
+          <button type="submit" class="btn" id="consult-next">Continue</button>
+        </div>
+      </form>
+      <div id="consult-done" hidden>
+        <h2>Consultation received</h2>
+        <p>A licensed clinician will review your answers, usually within 24 hours. If they have questions, they'll message you. If they prescribe a treatment, it ships from our partner pharmacy in plain packaging, and that's when you're charged.</p>
+        <p class="note small">This is a preview: nothing you entered was saved or sent.</p>
+        <a class="btn" href="./">Back to home</a>
+      </div>
+    </div>
+    <aside class="consult__aside" id="consult-product"></aside>
+  </div>
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/pages.js"></script>
+<script>Pages.consult();</script>
+</body>
+</html>
