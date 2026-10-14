@@ -174,6 +174,9 @@ p { margin: 0 0 1em; }
 /* ---------- Product cards ---------- */
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 40px 24px; }
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 880px) { .grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .grid--3 { grid-template-columns: 1fr; } }
 .card { display: flex; flex-direction: column; }
 .card__link { text-decoration: none; flex: 1; }
 .card__art { position: relative; background: var(--tint, var(--sunk)); aspect-ratio: 4 / 5; display: grid; place-items: center; padding: 12% 18% 6%; transition: background .25s; }

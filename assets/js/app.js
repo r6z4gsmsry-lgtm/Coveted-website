@@ -41,7 +41,7 @@ function labelLines(name) {
     const words = (i ? "+ " + part : part).split(" ");
     let line = "";
     words.forEach((w) => {
-      if ((line + " " + w).trim().length > 13 && line) { lines.push(line); line = w; }
+      if ((line + " " + w).trim().length > 12 && line) { lines.push(line); line = w; }
       else line = (line + " " + w).trim();
     });
     if (line) lines.push(line);
@@ -52,7 +52,7 @@ function labelLines(name) {
 function label(p, x, y, w) {
   const lines = labelLines(p.name);
   const h = 34 + lines.length * 11;
-  const text = lines.map((l, i) => `<text x="${x + w / 2}" y="${y + 30 + i * 11}" text-anchor="middle" font-size="7.6" fill="#1d1c1a">${esc(l)}</text>`).join("");
+  const text = lines.map((l, i) => `<text x="${x + w / 2}" y="${y + 30 + i * 11}" text-anchor="middle" font-size="7" fill="#1d1c1a">${esc(l)}</text>`).join("");
   return `<g font-family="Geist Mono, monospace">
     <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#f4efe4"/>
     <text x="${x + w / 2}" y="${y + 13}" text-anchor="middle" font-size="6.5" letter-spacing="2" fill="#6b665d">COVETED</text>

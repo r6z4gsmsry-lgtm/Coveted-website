@@ -1,6 +1,8 @@
 # Coveted
 
-**Rx products.** Prescription-strength products (tretinoin, finasteride, topical finasteride + minoxidil, pigment cream, azelaic acid 15%) are marked `rx: true` in `assets/js/data.js`. They're bought like everything else, one click to the bag. When the bag contains an Rx item, checkout adds a 4-question health check in the bag drawer; a licensed clinician must approve the order before it ships, and the customer is charged for the Rx item only once it's approved.
+The range: Tretinoin Cream (Rx), Finasteride 1 mg (Rx), Daily Fluid SPF 50+ PA++++, GHK-Cu Copper Peptide 1%, Hydrocortisone 1% Cream and Gradual Tanning Drops (DHA self-tan).
+
+**Rx products.** Prescription products (tretinoin, finasteride) are marked `rx: true` in `assets/js/data.js`. They're bought like everything else, one click to the bag. When the bag contains an Rx item, checkout adds a 4-question health check in the bag drawer; a licensed clinician must approve the order before it ships, and the customer is charged for the Rx item only once it's approved.
 
 This is required by law in the US and most other countries, and by payment providers and pharmacies. The health check is front-end only in this build, and nothing is stored or sent. To go live you need a telehealth partner (licensed clinicians in each state you ship to, HIPAA-compliant intake, e-prescribing, partner and compounding pharmacy) and a payment provider that supports prescriptions. Replace `REGIONS` in `data.js` with the states you serve, and have a healthcare lawyer review the site before launch.
 

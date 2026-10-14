@@ -80,15 +80,12 @@ const Pages = {
       const n = PRODUCTS.filter((p) => p.concerns.includes(c.id)).length;
       return `<a class="concern" href="shop.html#${c.id}" style="--tint:${c.tint}">
         <div><h3>${c.name}</h3><p>${c.line}</p></div>
-        <span>${n} products →</span>
+        <span>${n} product${n === 1 ? "" : "s"} →</span>
       </a>`;
     }).join("");
 
 
-    $("#bestsellers").innerHTML = [...PRODUCTS]
-      .filter((p) => p.supplyDays <= 90 && p.category !== "tool")
-      .sort((a, b) => b.reviewCount - a.reviewCount)
-      .slice(0, 4).map(productCard).join("");
+    $("#bestsellers").innerHTML = PRODUCTS.map(productCard).join("");
 
     const p = byId("spf-50");
     $("#sub-demo").innerHTML = `
