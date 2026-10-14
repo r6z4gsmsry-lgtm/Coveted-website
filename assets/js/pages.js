@@ -66,11 +66,7 @@ const Pages = {
         <span class="is-key">Day 30<br>Next tube arrives</span>
       </div>`;
 
-    $("#home-reviews").innerHTML = PRODUCTS
-      .flatMap((p) => p.reviews.filter((r) => r.photos).map((r) => ({ r, p })))
-      .slice(0, 3).map(({ r, p }) => reviewCard(r, p)).join("");
 
-    $("#home-guides").innerHTML = GUIDES.slice(0, 3).map(guideCard).join("");
   },
 
   shop() {
@@ -89,7 +85,7 @@ const Pages = {
       $("#category-filters").innerHTML = filterButtons(CATEGORIES, "category");
       const concern = CONCERNS.find((c) => c.id === state.concern);
       $("#shop-title").textContent = concern ? concern.name : "All products";
-      $("#shop-line").textContent = concern ? concern.line : "Every product, listed by the problem it solves.";
+      $("#shop-line").textContent = concern ? concern.line : "Everything we stock, in one place.";
 
       let list = PRODUCTS.filter((p) =>
         (state.concern === "all" || p.concerns.includes(state.concern)) &&

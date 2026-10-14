@@ -4,13 +4,13 @@
    copy: replace them with real, verified customer reviews before launch. */
 
 const CONCERNS = [
-  { id: "texture", name: "Texture", line: "Rough patches, enlarged pores, uneven surface." },
-  { id: "breakouts", name: "Breakouts & oil", line: "Excess sebum, congestion, recurring spots." },
-  { id: "hairline", name: "Hairline", line: "Thinning at the temples and crown." },
-  { id: "dark-circles", name: "Dark circles", line: "Pigment and puffiness under the eye." },
-  { id: "tone", name: "Uneven tone", line: "Post-blemish marks, dullness, sun spots." },
-  { id: "jawline", name: "Jaw & definition", line: "Masseter training and facial definition." },
-  { id: "protection", name: "Daily protection", line: "UV, the cause of most visible ageing." }
+  { id: "texture", name: "Texture", line: "For smoother, softer-feeling skin." },
+  { id: "breakouts", name: "Breakouts & oil", line: "For clearer, calmer, less shiny skin." },
+  { id: "hairline", name: "Hairline", line: "For fuller, healthier-looking hair." },
+  { id: "dark-circles", name: "Dark circles", line: "For brighter, more rested-looking eyes." },
+  { id: "tone", name: "Uneven tone", line: "For a clearer, more even complexion." },
+  { id: "jawline", name: "Jaw & definition", line: "For a sharper, more defined profile." },
+  { id: "protection", name: "Daily protection", line: "Everyday care that protects everything else." }
 ];
 
 const CATEGORIES = [
@@ -293,7 +293,7 @@ const PRODUCTS = [
     hardToSource: false,
     rating: 4.5,
     reviewCount: 689,
-    problem: "Thinning at the temples and crown.",
+    problem: "For fuller, healthier-looking hair.",
     summary: "The most studied over-the-counter treatment for hereditary hair loss. Propylene-glycol-free foam for less scalp irritation than solutions.",
     actives: [
       { name: "Minoxidil", pct: "5%" }

@@ -142,7 +142,6 @@ function productCard(p) {
         <p class="card__problem">${esc(CONCERNS.find((c) => c.id === p.concerns[0]).name)}</p>
         <h3 class="card__name">${esc(p.name)}</h3>
         <p class="card__format">${esc(p.format)}</p>
-        <ul class="actives">${p.actives.slice(0, 3).map((a) => `<li><span>${esc(a.name)}</span><span>${esc(a.pct)}</span></li>`).join("")}</ul>
       </div>
     </a>
     <div class="card__foot">
@@ -325,7 +324,7 @@ function renderChrome() {
       <div class="wrap footer__grid">
         <div>
           <p class="logo">Coveted</p>
-          <p class="muted">Hard-to-source actives, consistently in stock. Every ingredient named, every strength listed.</p>
+          <p class="muted">Hard-to-find essentials for skin, hair and face. Always in stock, made for everyone.</p>
         </div>
         <div>
           <p class="eyebrow">Shop</p>

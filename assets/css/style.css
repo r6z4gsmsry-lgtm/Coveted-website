@@ -232,6 +232,14 @@ p { margin: 0 0 1em; }
 .timeline span::before { content: ""; position: absolute; top: 0; left: 50%; width: 13px; height: 13px; margin-left: -6.5px; border-radius: 50%; background: var(--bg); border: 1px solid var(--ink); }
 .timeline span.is-key::before { background: var(--amber); border-color: var(--amber); }
 
+/* ---------- Approach ---------- */
+
+.approach { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.approach > div { border-top: 1px solid var(--ink); padding-top: 1.2rem; min-width: 0; }
+.approach p { margin: 0; }
+@media (max-width: 880px) { .approach { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .approach { grid-template-columns: 1fr; } }
+
 /* ---------- Reviews ---------- */
 
 .reviews { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
