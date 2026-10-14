@@ -78,7 +78,7 @@ const PRODUCTS = [
     "label": ["Tretinoin"],
     "sub": "Cream · Rx",
     "badge": "Bestseller",
-    "benefit": "Smoother, clearer skin",
+    "benefit": "Smoother, clearer, younger skin",
     "name": "Tretinoin Cream",
     "format": "Prescription retinoid · strength set by your clinician",
     "category": "prescription",
@@ -637,19 +637,7 @@ const STORE = {
 
 // States you ship Rx items to. Replace with your real list.
 const REGIONS = [
-  "Arizona",
-  "California",
-  "Colorado",
-  "Florida",
-  "Georgia",
-  "Illinois",
-  "Massachusetts",
-  "New Jersey",
-  "New York",
-  "North Carolina",
-  "Ohio",
-  "Pennsylvania",
-  "Texas",
-  "Virginia",
-  "Washington"
+Australia,
+   Uk,
+   USA
 ];
