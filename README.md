@@ -1,6 +1,8 @@
 # Coveted
 
-A storefront for hard-to-source, function-first skin, hair and "looksmaxing" products. Static HTML/CSS/JS — no build step. Open `index.html` in a browser, or serve the folder with any static host (GitHub Pages, Netlify, Cloudflare Pages).
+A storefront for hard-to-source, function-first skin, hair and "looksmaxing" products. Static HTML/CSS/JS — no build step. Open `index.html` in a browser, or serve the folder with any static host.
+
+**Cloudflare Workers:** `wrangler.jsonc` serves the folder as static assets (files listed in `.assetsignore` are not published). Connect the repo in Cloudflare with no build command and `npx wrangler deploy` as the deploy command.
 
 ## Pages
 
