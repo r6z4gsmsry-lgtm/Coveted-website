@@ -1,8 +1,8 @@
 # Coveted
 
-**Telehealth model.** Prescription treatments (tretinoin, finasteride, topical finasteride + minoxidil, compounded pigment cream, azelaic acid 15%) are marked `rx: true` in `assets/js/data.js`. They can't be added to the bag: their product pages lead to an online consultation (`consult.html`) instead. Non-prescription products (GHK-Cu serums, SPF, niacinamide, ketoconazole shampoo and others) are sold normally.
+**Rx products.** Prescription-strength products (tretinoin, finasteride, topical finasteride + minoxidil, pigment cream, azelaic acid 15%) are marked `rx: true` in `assets/js/data.js`. They're bought like everything else, one click to the bag. When the bag contains an Rx item, checkout adds a 4-question health check in the bag drawer; a licensed clinician must approve the order before it ships, and the customer is charged for the Rx item only once it's approved.
 
-The consultation is a front-end preview only. Answers are never stored or sent. To go live you need a telehealth infrastructure partner that provides licensed clinicians in each state, a HIPAA-compliant intake and records system, e-prescribing, and a partner (including compounding) pharmacy. Payment processing also needs a provider that supports telehealth and prescriptions. Replace `REGIONS` in `data.js` with the states your clinicians cover, and have a healthcare lawyer review the site copy, claims and flows before launch.
+This is required by law in the US and most other countries, and by payment providers and pharmacies. The health check is front-end only in this build, and nothing is stored or sent. To go live you need a telehealth partner (licensed clinicians in each state you ship to, HIPAA-compliant intake, e-prescribing, partner and compounding pharmacy) and a payment provider that supports prescriptions. Replace `REGIONS` in `data.js` with the states you serve, and have a healthcare lawyer review the site before launch.
 
 A storefront for hard-to-source, function-first skin, hair and "looksmaxing" products. Static HTML/CSS/JS — no build step. Open `index.html` in a browser, or serve the folder with any static host.
 

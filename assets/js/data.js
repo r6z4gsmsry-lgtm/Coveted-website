@@ -1,6 +1,7 @@
 /* Coveted — catalogue, concerns and guides.
-   Products with "rx: true" are prescription treatments: they are only
-   available after an online consultation and clinician approval.
+   Products with "rx: true" are prescription treatments: they're bought
+   like anything else, and checkout adds a short health check that a
+   licensed clinician approves before the item ships.
    Reviews are placeholder copy: replace them with real, verified customer
    reviews before launch. */
 
@@ -8,36 +9,43 @@ const CONCERNS = [
   {
     "id": "texture",
     "name": "Texture",
+    "tint": "#e7dcc7",
     "line": "For smoother, softer-feeling skin."
   },
   {
     "id": "breakouts",
     "name": "Breakouts & oil",
+    "tint": "#d3dfdd",
     "line": "For clearer, calmer, less shiny skin."
   },
   {
     "id": "hairline",
     "name": "Hairline",
+    "tint": "#d3dcc6",
     "line": "For fuller, healthier-looking hair."
   },
   {
     "id": "dark-circles",
     "name": "Dark circles",
+    "tint": "#dcd9e0",
     "line": "For brighter, more rested-looking eyes."
   },
   {
     "id": "tone",
     "name": "Uneven tone",
+    "tint": "#ebd5c4",
     "line": "For a clearer, more even complexion."
   },
   {
     "id": "jawline",
     "name": "Jaw & definition",
+    "tint": "#d2d7dc",
     "line": "For a sharper, more defined profile."
   },
   {
     "id": "protection",
     "name": "Daily protection",
+    "tint": "#ebe3c2",
     "line": "Everyday care that protects everything else."
   }
 ];
@@ -195,7 +203,7 @@ const PRODUCTS = [
         "weeks": 40,
         "photos": true,
         "title": "Crown is filling in",
-        "text": "Ten months in and my crown has noticeably filled in. The consultation was quick and the clinician answered all my questions."
+        "text": "Ten months in and my crown has noticeably filled in. Ordering was as easy as anything else on the site."
       }
     ]
   },
@@ -505,7 +513,7 @@ const PRODUCTS = [
     "rating": 4.6,
     "reviewCount": 187,
     "problem": "Red and brown marks left behind after breakouts.",
-    "summary": "Azelaic acid fades post-blemish marks and calms redness. At 15% it's a prescription treatment, so it's available after a quick consultation.",
+    "summary": "Azelaic acid fades post-blemish marks and calms redness. At 15% it's a prescription strength, so checkout includes a quick health check.",
     "actives": [
       {
         "name": "Azelaic acid",

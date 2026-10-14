@@ -134,10 +134,12 @@ function stockBadge(p, long = false) {
 
 /* ---------- Product card ---------- */
 
+const tintOf = (p) => (CONCERNS.find((c) => c.id === p.concerns[0]) || {}).tint || "var(--sunk)";
+
 function productCard(p) {
-  return `<article class="card">
+  return `<article class="card" style="--tint:${tintOf(p)}">
     <a href="product.html#${p.id}" class="card__link">
-      <div class="card__art">${productArt(p)}${p.rx ? `<span class="tag tag--rx">Prescription</span>` : p.hardToSource ? `<span class="tag">Hard to source</span>` : ""}</div>
+      <div class="card__art">${productArt(p)}${p.rx ? `<span class="tag tag--rx">Rx</span>` : p.hardToSource ? `<span class="tag">Hard to source</span>` : ""}</div>
       <div class="card__body">
         <p class="card__problem">${esc(CONCERNS.find((c) => c.id === p.concerns[0]).name)}</p>
         <h3 class="card__name">${esc(p.name)}</h3>
@@ -146,11 +148,10 @@ function productCard(p) {
     </a>
     <div class="card__foot">
       <div>
-        ${p.rx ? `<p class="card__price">From ${money(p.price)}<span class="muted"> / month</span></p>
-        <p class="card__sub">Includes online consultation</p>` : `<p class="card__price">${money(p.price)} <span class="muted">· ${esc(p.size.split(" ·")[0])}</span></p>
-        <p class="card__sub">${money(subPrice(p))} on subscription</p>`}
+        <p class="card__price">${money(p.price)} <span class="muted">· ${esc(p.size.split(" ·")[0])}</span></p>
+        <p class="card__sub">${money(subPrice(p))} on subscription</p>
       </div>
-      ${stockBadge(p)}
+      <button class="quick" data-add="${p.id}" aria-label="Add ${esc(p.name)} to bag">${p.stock.status === "out" ? "Reserve" : "Add +"}</button>
     </div>
   </article>`;
 }
@@ -163,7 +164,6 @@ const cart = {
   persist() { save("cv-cart", this.items); save("cv-samples", this.samples); renderCart(); },
   add(id, mode = "once", every = null, qty = 1) {
     const p = byId(id);
-    if (p.rx) { location.href = "consult.html#" + id; return; } // prescriptions go through a consultation
     const line = this.items.find((l) => l.id === id && l.mode === mode);
     if (line) line.qty += qty;
     else this.items.push({ id, mode, every: every || p.supplyDays, qty });
@@ -241,9 +241,59 @@ function renderCart() {
       <p><span>Subtotal</span><span>${money(subtotal)}</span></p>
       <p><span>Shipping</span><span>${remaining > 0 ? money(4.95) : "Free"}</span></p>
     </div>
+    ${cart.items.some((l) => byId(l.id).rx) ? `<p class="small muted center">Your bag has an Rx item. Checkout includes a quick 4-question health check.</p>` : ""}
     <button class="btn btn--block" id="checkout">Checkout</button>
     <p class="small muted center">Every ${ordinal(STORE.loyaltyEvery)} order includes a full-size product of your choice.</p>
-    <p class="small note center" id="checkout-note" hidden>Checkout isn't connected yet. Connect Shopify, Stripe or similar — see README.</p>`;
+`;
+}
+
+/* Checkout. Bags with an Rx item get a short health check that a licensed
+   clinician reviews after the order is placed. Payment isn't connected in
+   this build (see README). */
+function startCheckout() {
+  const rxItems = cart.items.map((l) => byId(l.id)).filter((p) => p.rx);
+  if (!rxItems.length) return showPaymentNote();
+  $("#cart-body").innerHTML = `<form class="health" id="health">
+    <p class="eyebrow">Quick health check</p>
+    <h3>4 questions for your ${rxItems.map((p) => esc(p.name)).join(" and ")}</h3>
+    <p class="small muted">A licensed clinician checks these before your Rx item ships, usually the same day. You're only charged for it once it's approved.</p>
+    <fieldset><legend>Are you 18 or over?</legend>
+      <label class="choice"><input type="radio" name="adult" value="yes" required> Yes</label>
+      <label class="choice"><input type="radio" name="adult" value="no"> No</label></fieldset>
+    <fieldset><legend>Are you pregnant, breastfeeding or trying to conceive?</legend>
+      <label class="choice"><input type="radio" name="pregnant" value="yes" required> Yes</label>
+      <label class="choice"><input type="radio" name="pregnant" value="no"> No</label></fieldset>
+    <fieldset><legend>Do you take any medication or have a liver, heart or skin condition?</legend>
+      <label class="choice"><input type="radio" name="health" value="yes" required> Yes</label>
+      <label class="choice"><input type="radio" name="health" value="no"> No</label>
+      <label for="health-notes" class="sr">Details</label>
+      <textarea class="select" id="health-notes" name="notes" rows="2" placeholder="If yes, tell us briefly"></textarea></fieldset>
+    <label class="health__state" for="health-state"><span>Shipping state</span>
+      <select class="select" id="health-state" name="state" required><option value="">Choose</option>${REGIONS.map((r) => `<option>${r}</option>`).join("")}</select></label>
+  </form>`;
+  $("#cart-foot").innerHTML = `<button class="btn btn--block" form="health">Continue to payment</button>
+    <button class="link small center" id="health-back" type="button">Back to bag</button>`;
+  $("#health-back").addEventListener("click", renderCart);
+  $("#health").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const d = new FormData(e.target);
+    if (d.get("adult") === "no") {
+      $("#cart-body").innerHTML = `<p class="eyebrow">Health check</p><h3>We can only send Rx items to adults</h3><p class="muted">Remove the Rx item from your bag to continue with everything else.</p>`;
+      $("#cart-foot").innerHTML = `<button class="btn btn--block" id="health-back2">Back to bag</button>`;
+      $("#health-back2").addEventListener("click", renderCart);
+      return;
+    }
+    showPaymentNote(d.get("pregnant") === "yes");
+  });
+}
+
+function showPaymentNote(flag) {
+  $("#cart-body").innerHTML = `<p class="eyebrow">Payment</p>
+    <h3>Almost there</h3>
+    ${flag ? `<p class="flag small">Some Rx treatments aren't used during pregnancy. A clinician will contact you about a suitable alternative before anything ships.</p>` : ""}
+    <p class="muted">This is where payment goes. Checkout isn't connected in this preview, so nothing was charged or saved. See README to connect Shopify, Stripe or a telehealth checkout.</p>`;
+  $("#cart-foot").innerHTML = `<button class="btn btn--block" id="health-back3">Back to bag</button>`;
+  $("#health-back3").addEventListener("click", renderCart);
 }
 
 function ordinal(n) {
@@ -257,7 +307,12 @@ function bindCart() {
     if (!t) return;
     if (t.matches(".js-open-cart")) openCart();
     if (t.matches(".js-close-cart")) closeCart();
-    if (t.id === "checkout") $("#checkout-note").hidden = false;
+    if (t.id === "checkout") startCheckout();
+    if (t.dataset.add) {
+      e.preventDefault();
+      cart.add(t.dataset.add);
+      openCart();
+    }
     if (t.dataset.line !== undefined) {
       const i = +t.dataset.line;
       if (t.dataset.mode) cart.update(i, { mode: t.dataset.mode });
@@ -295,7 +350,7 @@ function renderChrome() {
   const page = document.body.dataset.page;
   const nav = [
     ["shop", "shop.html", "Shop"],
-    ["how", "./#how", "How it works"],
+    ["concerns", "./#concerns", "Concerns"],
     ["journal", "journal.html", "Journal"],
     ["subscribe", "subscribe.html", "Subscribe & save"],
     ["help", "help.html", "Help"]
@@ -303,8 +358,8 @@ function renderChrome() {
   document.body.insertAdjacentHTML("afterbegin", `
     <a class="skip" href="#main">Skip to content</a>
     <div class="announce">
-      <span>Free online consultation</span>
-      <span>Licensed clinicians</span>
+      <span>Free shipping over ${money(STORE.freeShippingOver)}</span>
+      <span>Subscribe &amp; save 15%</span>
       <span>Discreet, tracked delivery</span>
     </div>
     <header class="header">
@@ -357,7 +412,7 @@ function renderChrome() {
       </div>
       <div class="wrap footer__base small muted">
         <span>© ${new Date().getFullYear()} Coveted</span>
-        <span>Prescription treatments are only available after an online consultation and approval by a licensed clinician. Information on this site is not medical advice.</span>
+        <span>Products marked Rx are reviewed by a licensed clinician before they ship. Information on this site is not medical advice.</span>
       </div>
     </footer>
     <div class="scrim"></div>
