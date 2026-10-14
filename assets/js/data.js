@@ -200,7 +200,7 @@ const PRODUCTS = [
   },
   {
     "id": "spf-50",
-    "name": "Daily Fluid SPF 50+ PA++++",
+    "name": "Daily Sunscreen SPF 50+ PA++++",
     "format": "Broad-spectrum UVA/UVB sunscreen",
     "category": "sunscreen",
     "concerns": [
@@ -411,14 +411,14 @@ const PRODUCTS = [
     ]
   },
   {
-    "id": "tanner",
-    "name": "Gradual Tanning Drops",
-    "format": "Self-tan drops for face and body",
+    "id": "Melanotan",
+    "name": "MT1",
+    "format": "Even full body tan",
     "category": "tanning",
     "concerns": [
       "tan"
     ],
-    "bottle": "dropper",
+    "bottle": "Nasal Spray",
     "size": "30 ml",
     "price": 28,
     "supplyDays": 45,
@@ -426,7 +426,7 @@ const PRODUCTS = [
       "status": "in",
       "qty": 190
     },
-    "hardToSource": false,
+    "hardToSource": True,
     "rating": 4.5,
     "reviewCount": 274,
     "problem": "Pale or uneven skin tone, without time in the sun.",
