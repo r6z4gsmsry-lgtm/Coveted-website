@@ -7,9 +7,9 @@ A storefront for hard-to-source, function-first skin, hair and "looksmaxing" pro
 | Page | What it does |
 | --- | --- |
 | `index.html` | Hero, shop-by-concern grid, stock promise, best sellers, subscribe & save, photo reviews, guides |
-| `shop.html` | Full catalogue, filter by concern (`?concern=hairline`) and type (`?category=serum`), in-stock toggle, sort |
-| `product.html?id=…` | Problem, active-ingredient table with strengths, subscribe/one-time options, stock record, reorder reminder, how to use, expected results timeline, full INCI list, pairings, reviews, related guides |
-| `journal.html`, `guide.html?slug=…` | Education content, filterable by concern, with linked products |
+| `shop.html` | Full catalogue, filter by concern (`shop.html#hairline`) and type (`shop.html#serum`), in-stock toggle, sort |
+| `product.html#<id>` | Problem, active-ingredient table with strengths, subscribe/one-time options, stock record, reorder reminder, how to use, expected results timeline, full INCI list, pairings, reviews, related guides |
+| `journal.html`, `guide.html#<slug>` | Education content, filterable by concern, with linked products |
 | `subscribe.html` | Subscriptions, "every 5th order" membership, reorder reminders, email policy |
 | `help.html` | Shipping, returns, stock promise, samples, FAQ |
 

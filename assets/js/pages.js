@@ -9,13 +9,13 @@ function reviewCard(r, p) {
     ${stars(r.rating)}
     <h3>${esc(r.title)}</h3>
     <p>${esc(r.text)}</p>
-    <p class="review__meta">${esc(r.name)}${r.verified ? " · Verified buyer" : ""} · ${r.weeks} weeks of use${p ? `<br><a href="product.html?id=${p.id}">${esc(p.name)}</a>` : ""}</p>
+    <p class="review__meta">${esc(r.name)}${r.verified ? " · Verified buyer" : ""} · ${r.weeks} weeks of use${p ? `<br><a href="product.html#${p.id}">${esc(p.name)}</a>` : ""}</p>
   </article>`;
 }
 
 function guideCard(g) {
   const c = CONCERNS.find((x) => x.id === g.concern);
-  return `<a class="guide" href="guide.html?slug=${g.slug}">
+  return `<a class="guide" href="guide.html#${g.slug}">
     <span class="eyebrow" style="margin:0">${esc(c.name)} · ${g.minutes} min read</span>
     <h3>${esc(g.title)}</h3>
     <p>${esc(g.intro)}</p>
@@ -28,7 +28,7 @@ const Pages = {
 
     $("#concern-grid").innerHTML = CONCERNS.map((c) => {
       const n = PRODUCTS.filter((p) => p.concerns.includes(c.id)).length;
-      return `<a class="concern" href="shop.html?concern=${c.id}">
+      return `<a class="concern" href="shop.html#${c.id}">
         <div><h3>${c.name}</h3><p>${c.line}</p></div>
         <span>${n} products →</span>
       </a>`;
@@ -62,7 +62,12 @@ const Pages = {
   },
 
   shop() {
-    const state = { concern: params.get("concern") || "all", category: params.get("category") || "all", inStock: false, sort: "popular" };
+    const state = {
+      concern: params.get("concern") || (CONCERNS.some((c) => c.id === route) ? route : "all"),
+      category: params.get("category") || (CATEGORIES.some((c) => c.id === route) ? route : "all"),
+      inStock: false,
+      sort: "popular"
+    };
 
     const filterButtons = (list, key) =>
       [{ id: "all", name: "All" }, ...list].map((x) => `<button data-${key}="${x.id}" aria-pressed="${state[key] === x.id}">${x.name}</button>`).join("");
@@ -88,10 +93,8 @@ const Pages = {
       $("#count").textContent = `${list.length} product${list.length === 1 ? "" : "s"}`;
       $("#results").innerHTML = list.length ? list.map(productCard).join("") : `<p class="muted">Nothing matches those filters yet.</p>`;
 
-      const q = new URLSearchParams();
-      if (state.concern !== "all") q.set("concern", state.concern);
-      if (state.category !== "all") q.set("category", state.category);
-      history.replaceState(null, "", "shop.html" + (q.toString() ? "?" + q : ""));
+      const token = state.concern !== "all" ? state.concern : state.category !== "all" ? state.category : "";
+      try { history.replaceState(null, "", "shop.html" + (token ? "#" + token : "")); } catch { /* history unavailable */ }
     }
 
     document.addEventListener("click", (e) => {
@@ -107,13 +110,13 @@ const Pages = {
   },
 
   product() {
-    const p = byId(params.get("id")) || PRODUCTS[0];
+    const p = byId(params.get("id") || route) || PRODUCTS[0];
     const concern = CONCERNS.find((c) => c.id === p.concerns[0]);
     const out = p.stock.status === "out";
     document.title = `${p.name} — ${p.format} | Coveted`;
     $('meta[name="description"]').setAttribute("content", `${p.problem} ${p.actives.map((a) => `${a.name} ${a.pct}`).join(", ")}.`);
 
-    $("#crumbs").innerHTML = `<a href="shop.html">Shop</a> / <a href="shop.html?concern=${concern.id}">${concern.name}</a> / ${esc(p.name)}`;
+    $("#crumbs").innerHTML = `<a href="shop.html">Shop</a> / <a href="shop.html#${concern.id}">${concern.name}</a> / ${esc(p.name)}`;
     $("#art").innerHTML = productArt(p) + (p.hardToSource ? `<span class="tag">Hard to source</span>` : "");
 
     $("#info").innerHTML = `
@@ -236,7 +239,7 @@ const Pages = {
   },
 
   guide() {
-    const g = GUIDES.find((x) => x.slug === params.get("slug")) || GUIDES[0];
+    const g = GUIDES.find((x) => x.slug === (params.get("slug") || route)) || GUIDES[0];
     const c = CONCERNS.find((x) => x.id === g.concern);
     document.title = `${g.title} | Coveted Journal`;
     $('meta[name="description"]').setAttribute("content", g.intro);

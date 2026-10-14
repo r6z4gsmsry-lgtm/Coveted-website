@@ -5,7 +5,12 @@ const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const money = (n) => "$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
 const subPrice = (p) => p.price * (1 - STORE.subscribeDiscount);
 const byId = (id) => PRODUCTS.find((p) => p.id === id);
+/* Pages are addressed with a bare hash token (product.html#retinal-01, shop.html#hairline),
+   which works on any static host. Old ?id= style links still resolve. */
 const params = new URLSearchParams(location.search);
+const route = decodeURIComponent(location.hash.slice(1));
+const isRoute = (t) => [PRODUCTS, GUIDES, CONCERNS, CATEGORIES].some((list) => list.some((x) => (x.id || x.slug) === t));
+addEventListener("hashchange", () => { if (isRoute(decodeURIComponent(location.hash.slice(1)))) location.reload(); });
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 function store(key, fallback) {
@@ -131,7 +136,7 @@ function stockBadge(p, long = false) {
 
 function productCard(p) {
   return `<article class="card">
-    <a href="product.html?id=${p.id}" class="card__link">
+    <a href="product.html#${p.id}" class="card__link">
       <div class="card__art">${productArt(p)}${p.hardToSource ? `<span class="tag">Hard to source</span>` : ""}</div>
       <div class="card__body">
         <p class="card__problem">${esc(CONCERNS.find((c) => c.id === p.concerns[0]).name)}</p>
@@ -324,11 +329,11 @@ function renderChrome() {
         </div>
         <div>
           <p class="eyebrow">Shop</p>
-          ${CATEGORIES.map((c) => `<a href="shop.html?category=${c.id}">${c.name}</a>`).join("")}
+          ${CATEGORIES.map((c) => `<a href="shop.html#${c.id}">${c.name}</a>`).join("")}
         </div>
         <div>
           <p class="eyebrow">Concerns</p>
-          ${CONCERNS.map((c) => `<a href="shop.html?concern=${c.id}">${c.name}</a>`).join("")}
+          ${CONCERNS.map((c) => `<a href="shop.html#${c.id}">${c.name}</a>`).join("")}
         </div>
         <div>
           <p class="eyebrow">Help</p>
