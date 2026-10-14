@@ -294,7 +294,7 @@ function renderChrome() {
   const page = document.body.dataset.page;
   const nav = [
     ["shop", "shop.html", "Shop"],
-    ["concerns", "index.html#concerns", "Concerns"],
+    ["concerns", "./#concerns", "Concerns"],
     ["journal", "journal.html", "Journal"],
     ["subscribe", "subscribe.html", "Subscribe & save"],
     ["help", "help.html", "Help"]
@@ -308,7 +308,7 @@ function renderChrome() {
     </div>
     <header class="header">
       <div class="wrap header__inner">
-        <a class="logo" href="index.html" aria-label="Coveted home">Coveted</a>
+        <a class="logo" href="./" aria-label="Coveted home">Coveted</a>
         <nav class="nav" aria-label="Main">
           ${nav.map(([k, href, t]) => `<a href="${href}" ${k === page ? 'aria-current="page"' : ""}>${t}</a>`).join("")}
         </nav>
